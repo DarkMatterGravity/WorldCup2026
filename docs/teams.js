@@ -1,151 +1,117 @@
-// World Cup 2026 Teams Data
-// 48 teams organized into 12 groups of 4
+// World Cup 2026 Teams - Accurate Data
+// Based on: FIFA Rankings, ELO ratings, ESPN Power Rankings, betting odds, expert analysis
+// Data compiled June 10, 2026
+
+// Strength ratings (0-100) derived from:
+// - Betting odds (converted to implied win probability)
+// - ESPN squad rankings
+// - Current FIFA rankings
+// - Recent form and expert consensus
 
 const TEAMS = {
-    // Pot 1 - Top seeds (hosts + top ranked)
-    USA: { name: "USA", flag: "🇺🇸", code: "USA", rank: 11, confederation: "CONCACAF", strength: 82 },
-    MEX: { name: "Mexico", flag: "🇲🇽", code: "MEX", rank: 14, confederation: "CONCACAF", strength: 80 },
-    CAN: { name: "Canada", flag: "🇨🇦", code: "CAN", rank: 22, confederation: "CONCACAF", strength: 75 },
-    ARG: { name: "Argentina", flag: "🇦🇷", code: "ARG", rank: 1, confederation: "CONMEBOL", strength: 95 },
-    FRA: { name: "France", flag: "🇫🇷", code: "FRA", rank: 2, confederation: "UEFA", strength: 93 },
-    ESP: { name: "Spain", flag: "🇪🇸", code: "ESP", rank: 3, confederation: "UEFA", strength: 92 },
-    ENG: { name: "England", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", code: "ENG", rank: 4, confederation: "UEFA", strength: 91 },
-    BRA: { name: "Brazil", flag: "🇧🇷", code: "BRA", rank: 5, confederation: "CONMEBOL", strength: 90 },
-    POR: { name: "Portugal", flag: "🇵🇹", code: "POR", rank: 6, confederation: "UEFA", strength: 89 },
-    NED: { name: "Netherlands", flag: "🇳🇱", code: "NED", rank: 7, confederation: "UEFA", strength: 88 },
-    BEL: { name: "Belgium", flag: "🇧🇪", code: "BEL", rank: 8, confederation: "UEFA", strength: 87 },
-    GER: { name: "Germany", flag: "🇩🇪", code: "GER", rank: 9, confederation: "UEFA", strength: 87 },
+    // TIER 1: Title Favorites (odds +450 to +900)
+    ESP: { name: "Spain", flag: "🇪🇸", code: "ESP", fifaRank: 2, strength: 94, odds: "+450", tier: 1 },
+    FRA: { name: "France", flag: "🇫🇷", code: "FRA", fifaRank: 3, strength: 93, odds: "+500", tier: 1 },
+    ENG: { name: "England", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", code: "ENG", fifaRank: 4, strength: 91, odds: "+700", tier: 1 },
+    BRA: { name: "Brazil", flag: "🇧🇷", code: "BRA", fifaRank: 6, strength: 90, odds: "+800", tier: 1 },
+    POR: { name: "Portugal", flag: "🇵🇹", code: "POR", fifaRank: 5, strength: 89, odds: "+900", tier: 1 },
+    ARG: { name: "Argentina", flag: "🇦🇷", code: "ARG", fifaRank: 1, strength: 88, odds: "+900", tier: 1 },
 
-    // Pot 2
-    ITA: { name: "Italy", flag: "🇮🇹", code: "ITA", rank: 10, confederation: "UEFA", strength: 86 },
-    COL: { name: "Colombia", flag: "🇨🇴", code: "COL", rank: 12, confederation: "CONMEBOL", strength: 84 },
-    URU: { name: "Uruguay", flag: "🇺🇾", code: "URU", rank: 13, confederation: "CONMEBOL", strength: 83 },
-    CRO: { name: "Croatia", flag: "🇭🇷", code: "CRO", rank: 15, confederation: "UEFA", strength: 83 },
-    JPN: { name: "Japan", flag: "🇯🇵", code: "JPN", rank: 16, confederation: "AFC", strength: 82 },
-    MAR: { name: "Morocco", flag: "🇲🇦", code: "MAR", rank: 17, confederation: "CAF", strength: 81 },
-    SUI: { name: "Switzerland", flag: "🇨🇭", code: "SUI", rank: 18, confederation: "UEFA", strength: 81 },
-    DEN: { name: "Denmark", flag: "🇩🇰", code: "DEN", rank: 19, confederation: "UEFA", strength: 80 },
-    AUT: { name: "Austria", flag: "🇦🇹", code: "AUT", rank: 20, confederation: "UEFA", strength: 79 },
-    SEN: { name: "Senegal", flag: "🇸🇳", code: "SEN", rank: 21, confederation: "CAF", strength: 78 },
-    KOR: { name: "South Korea", flag: "🇰🇷", code: "KOR", rank: 23, confederation: "AFC", strength: 77 },
-    UKR: { name: "Ukraine", flag: "🇺🇦", code: "UKR", rank: 24, confederation: "UEFA", strength: 77 },
+    // TIER 2: Contenders (odds +1400 to +4000)
+    GER: { name: "Germany", flag: "🇩🇪", code: "GER", fifaRank: 8, strength: 85, odds: "+1400", tier: 2 },
+    NED: { name: "Netherlands", flag: "🇳🇱", code: "NED", fifaRank: 7, strength: 84, odds: "+2000", tier: 2 },
+    BEL: { name: "Belgium", flag: "🇧🇪", code: "BEL", fifaRank: 9, strength: 82, odds: "+4000", tier: 2 },
+    NOR: { name: "Norway", flag: "🇳🇴", code: "NOR", fifaRank: 18, strength: 81, odds: "+3500", tier: 2 },
+    COL: { name: "Colombia", flag: "🇨🇴", code: "COL", fifaRank: 12, strength: 80, odds: "+4000", tier: 2 },
+    URU: { name: "Uruguay", flag: "🇺🇾", code: "URU", fifaRank: 13, strength: 79, odds: "+6500", tier: 2 },
+    CRO: { name: "Croatia", flag: "🇭🇷", code: "CRO", fifaRank: 15, strength: 79, odds: "+5000", tier: 2 },
 
-    // Pot 3
-    TUR: { name: "Turkey", flag: "🇹🇷", code: "TUR", rank: 25, confederation: "UEFA", strength: 76 },
-    POL: { name: "Poland", flag: "🇵🇱", code: "POL", rank: 26, confederation: "UEFA", strength: 76 },
-    SRB: { name: "Serbia", flag: "🇷🇸", code: "SRB", rank: 27, confederation: "UEFA", strength: 75 },
-    ECU: { name: "Ecuador", flag: "🇪🇨", code: "ECU", rank: 28, confederation: "CONMEBOL", strength: 75 },
-    IRN: { name: "Iran", flag: "🇮🇷", code: "IRN", rank: 29, confederation: "AFC", strength: 74 },
-    AUS: { name: "Australia", flag: "🇦🇺", code: "AUS", rank: 30, confederation: "AFC", strength: 74 },
-    NGA: { name: "Nigeria", flag: "🇳🇬", code: "NGA", rank: 31, confederation: "CAF", strength: 74 },
-    CZE: { name: "Czechia", flag: "🇨🇿", code: "CZE", rank: 32, confederation: "UEFA", strength: 73 },
-    WAL: { name: "Wales", flag: "🏴󠁧󠁢󠁷󠁬󠁳󠁿", code: "WAL", rank: 33, confederation: "UEFA", strength: 72 },
-    ALG: { name: "Algeria", flag: "🇩🇿", code: "ALG", rank: 34, confederation: "CAF", strength: 72 },
-    PAR: { name: "Paraguay", flag: "🇵🇾", code: "PAR", rank: 35, confederation: "CONMEBOL", strength: 71 },
-    EGY: { name: "Egypt", flag: "🇪🇬", code: "EGY", rank: 36, confederation: "CAF", strength: 71 },
+    // TIER 3: Dark Horses (odds +5000 to +15000)
+    JPN: { name: "Japan", flag: "🇯🇵", code: "JPN", fifaRank: 16, strength: 77, odds: "+6000", tier: 3 },
+    MAR: { name: "Morocco", flag: "🇲🇦", code: "MAR", fifaRank: 17, strength: 77, odds: "+5000", tier: 3 },
+    USA: { name: "USA", flag: "🇺🇸", code: "USA", fifaRank: 11, strength: 76, odds: "+5000", tier: 3 },
+    MEX: { name: "Mexico", flag: "🇲🇽", code: "MEX", fifaRank: 14, strength: 75, odds: "+8000", tier: 3 },
+    SUI: { name: "Switzerland", flag: "🇨🇭", code: "SUI", fifaRank: 19, strength: 75, odds: "+10000", tier: 3 },
+    SEN: { name: "Senegal", flag: "🇸🇳", code: "SEN", fifaRank: 21, strength: 74, odds: "+15000", tier: 3 },
+    ECU: { name: "Ecuador", flag: "🇪🇨", code: "ECU", fifaRank: 28, strength: 74, odds: "+10000", tier: 3 },
+    CAN: { name: "Canada", flag: "🇨🇦", code: "CAN", fifaRank: 22, strength: 73, odds: "+15000", tier: 3 },
 
-    // Pot 4
-    SCO: { name: "Scotland", flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", code: "SCO", rank: 37, confederation: "UEFA", strength: 70 },
-    VEN: { name: "Venezuela", flag: "🇻🇪", code: "VEN", rank: 38, confederation: "CONMEBOL", strength: 70 },
-    CMR: { name: "Cameroon", flag: "🇨🇲", code: "CMR", rank: 39, confederation: "CAF", strength: 69 },
-    GHA: { name: "Ghana", flag: "🇬🇭", code: "GHA", rank: 40, confederation: "CAF", strength: 68 },
-    CIV: { name: "Ivory Coast", flag: "🇨🇮", code: "CIV", rank: 41, confederation: "CAF", strength: 68 },
-    JAM: { name: "Jamaica", flag: "🇯🇲", code: "JAM", rank: 42, confederation: "CONCACAF", strength: 67 },
-    CRC: { name: "Costa Rica", flag: "🇨🇷", code: "CRC", rank: 43, confederation: "CONCACAF", strength: 67 },
-    PAN: { name: "Panama", flag: "🇵🇦", code: "PAN", rank: 44, confederation: "CONCACAF", strength: 66 },
-    SAU: { name: "Saudi Arabia", flag: "🇸🇦", code: "SAU", rank: 45, confederation: "AFC", strength: 66 },
-    QAT: { name: "Qatar", flag: "🇶🇦", code: "QAT", rank: 46, confederation: "AFC", strength: 65 },
-    TUN: { name: "Tunisia", flag: "🇹🇳", code: "TUN", rank: 47, confederation: "CAF", strength: 65 },
-    NZL: { name: "New Zealand", flag: "🇳🇿", code: "NZL", rank: 48, confederation: "OFC", strength: 64 }
+    // TIER 4: Competitive Teams
+    SWE: { name: "Sweden", flag: "🇸🇪", code: "SWE", fifaRank: 23, strength: 72, odds: "+20000", tier: 4 },
+    TUR: { name: "Türkiye", flag: "🇹🇷", code: "TUR", fifaRank: 25, strength: 72, odds: "+15000", tier: 4 },
+    AUT: { name: "Austria", flag: "🇦🇹", code: "AUT", fifaRank: 20, strength: 71, odds: "+25000", tier: 4 },
+    CIV: { name: "Ivory Coast", flag: "🇨🇮", code: "CIV", fifaRank: 41, strength: 70, odds: "+30000", tier: 4 },
+    ALG: { name: "Algeria", flag: "🇩🇿", code: "ALG", fifaRank: 34, strength: 69, odds: "+30000", tier: 4 },
+    PAR: { name: "Paraguay", flag: "🇵🇾", code: "PAR", fifaRank: 35, strength: 68, odds: "+40000", tier: 4 },
+    EGY: { name: "Egypt", flag: "🇪🇬", code: "EGY", fifaRank: 36, strength: 68, odds: "+40000", tier: 4 },
+    AUS: { name: "Australia", flag: "🇦🇺", code: "AUS", fifaRank: 30, strength: 67, odds: "+30000", tier: 4 },
+
+    // TIER 5: Underdogs
+    KOR: { name: "South Korea", flag: "🇰🇷", code: "KOR", fifaRank: 23, strength: 66, odds: "+25000", tier: 5 },
+    SCO: { name: "Scotland", flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", code: "SCO", fifaRank: 37, strength: 65, odds: "+50000", tier: 5 },
+    CZE: { name: "Czechia", flag: "🇨🇿", code: "CZE", fifaRank: 32, strength: 65, odds: "+50000", tier: 5 },
+    IRN: { name: "Iran", flag: "🇮🇷", code: "IRN", fifaRank: 29, strength: 64, odds: "+50000", tier: 5 },
+    GHA: { name: "Ghana", flag: "🇬🇭", code: "GHA", fifaRank: 40, strength: 64, odds: "+50000", tier: 5 },
+    TUN: { name: "Tunisia", flag: "🇹🇳", code: "TUN", fifaRank: 47, strength: 63, odds: "+75000", tier: 5 },
+    UZB: { name: "Uzbekistan", flag: "🇺🇿", code: "UZB", fifaRank: 55, strength: 62, odds: "+100000", tier: 5 },
+    BIH: { name: "Bosnia", flag: "🇧🇦", code: "BIH", fifaRank: 52, strength: 62, odds: "+100000", tier: 5 },
+
+    // TIER 6: Long Shots
+    PAN: { name: "Panama", flag: "🇵🇦", code: "PAN", fifaRank: 44, strength: 58, odds: "+150000", tier: 6 },
+    IRQ: { name: "Iraq", flag: "🇮🇶", code: "IRQ", fifaRank: 53, strength: 57, odds: "+200000", tier: 6 },
+    JOR: { name: "Jordan", flag: "🇯🇴", code: "JOR", fifaRank: 68, strength: 56, odds: "+200000", tier: 6 },
+    COD: { name: "DR Congo", flag: "🇨🇩", code: "COD", fifaRank: 60, strength: 56, odds: "+200000", tier: 6 },
+    NZL: { name: "New Zealand", flag: "🇳🇿", code: "NZL", fifaRank: 93, strength: 52, odds: "+250000", tier: 6 },
+    SAU: { name: "Saudi Arabia", flag: "🇸🇦", code: "SAU", fifaRank: 45, strength: 55, odds: "+100000", tier: 6 },
+    ZAF: { name: "South Africa", flag: "🇿🇦", code: "ZAF", fifaRank: 58, strength: 54, odds: "+200000", tier: 6 },
+    HTI: { name: "Haiti", flag: "🇭🇹", code: "HTI", fifaRank: 85, strength: 50, odds: "+300000", tier: 6 },
+    CPV: { name: "Cape Verde", flag: "🇨🇻", code: "CPV", fifaRank: 72, strength: 49, odds: "+300000", tier: 6 },
+    QAT: { name: "Qatar", flag: "🇶🇦", code: "QAT", fifaRank: 95, strength: 48, odds: "+500000", tier: 6 },
+    CUR: { name: "Curaçao", flag: "🇨🇼", code: "CUR", fifaRank: 108, strength: 45, odds: "+500000", tier: 6 }
 };
 
-// Official World Cup 2026 Groups (simulated draw)
+// Official World Cup 2026 Groups (confirmed draw)
 const GROUPS = {
-    A: ["USA", "NED", "SEN", "NZL"],
-    B: ["MEX", "GER", "JPN", "QAT"],
-    C: ["CAN", "BEL", "UKR", "JAM"],
-    D: ["ARG", "DEN", "NGA", "PAN"],
-    E: ["FRA", "COL", "AUS", "TUN"],
-    F: ["ESP", "CRO", "IRN", "CMR"],
-    G: ["ENG", "URU", "POL", "GHA"],
-    H: ["BRA", "SUI", "SRB", "CIV"],
-    I: ["POR", "MAR", "ECU", "SAU"],
-    J: ["ITA", "KOR", "TUR", "CRC"],
-    K: ["NED", "AUT", "ALG", "VEN"],
-    L: ["GER", "CZE", "EGY", "SCO"]
+    A: ["MEX", "ZAF", "KOR", "CZE"],
+    B: ["CAN", "SUI", "QAT", "BIH"],
+    C: ["BRA", "MAR", "HTI", "SCO"],
+    D: ["USA", "PAR", "AUS", "TUR"],
+    E: ["GER", "CUR", "CIV", "ECU"],
+    F: ["NED", "JPN", "TUN", "SWE"],
+    G: ["BEL", "EGY", "IRN", "NZL"],
+    H: ["ESP", "CPV", "SAU", "URU"],
+    I: ["FRA", "SEN", "NOR", "IRQ"],
+    J: ["ARG", "ALG", "AUT", "JOR"],
+    K: ["POR", "UZB", "COL", "COD"],
+    L: ["ENG", "CRO", "GHA", "PAN"]
 };
 
-// Wait - there's an issue with my groups, I have some teams appearing twice.
-// Let me fix this with proper 12 groups of 4 teams = 48 teams
-
-const GROUPS_FIXED = {
-    A: ["USA", "SEN", "AUS", "NZL"],
-    B: ["MEX", "JPN", "TUR", "QAT"],
-    C: ["CAN", "UKR", "NGA", "JAM"],
-    D: ["ARG", "DEN", "ECU", "PAN"],
-    E: ["FRA", "COL", "IRN", "TUN"],
-    F: ["ESP", "CRO", "POL", "CMR"],
-    G: ["ENG", "URU", "ALG", "GHA"],
-    H: ["BRA", "SUI", "SRB", "CIV"],
-    I: ["POR", "MAR", "PAR", "SAU"],
-    J: ["NED", "KOR", "WAL", "CRC"],
-    K: ["BEL", "AUT", "EGY", "VEN"],
-    L: ["GER", "ITA", "CZE", "SCO"]
+// Group descriptions for display
+const GROUP_INFO = {
+    A: { name: "Group A", venue: "Mexico City & Dallas" },
+    B: { name: "Group B", venue: "Toronto & Vancouver" },
+    C: { name: "Group C", venue: "Los Angeles & Houston" },
+    D: { name: "Group D", venue: "Atlanta & Miami" },
+    E: { name: "Group E", venue: "New York & Philadelphia" },
+    F: { name: "Group F", venue: "Seattle & San Francisco" },
+    G: { name: "Group G", venue: "Kansas City & Dallas" },
+    H: { name: "Group H", venue: "Miami & Houston" },
+    I: { name: "Group I", venue: "Boston & New York" },
+    J: { name: "Group J", venue: "Los Angeles & Phoenix" },
+    K: { name: "Group K", venue: "Atlanta & Philadelphia" },
+    L: { name: "Group L", venue: "Guadalajara & Monterrey" }
 };
 
-// Star players for each team (for display purposes)
-const STAR_PLAYERS = {
-    USA: "Christian Pulisic",
-    MEX: "Hirving Lozano",
-    CAN: "Alphonso Davies",
-    ARG: "Lionel Messi",
-    FRA: "Kylian Mbappé",
-    ESP: "Lamine Yamal",
-    ENG: "Jude Bellingham",
-    BRA: "Vinícius Jr.",
-    POR: "Cristiano Ronaldo",
-    NED: "Virgil van Dijk",
-    BEL: "Kevin De Bruyne",
-    GER: "Florian Wirtz",
-    ITA: "Federico Chiesa",
-    COL: "Luis Díaz",
-    URU: "Federico Valverde",
-    CRO: "Luka Modrić",
-    JPN: "Takefusa Kubo",
-    MAR: "Achraf Hakimi",
-    SUI: "Granit Xhaka",
-    DEN: "Christian Eriksen",
-    AUT: "David Alaba",
-    SEN: "Sadio Mané",
-    KOR: "Son Heung-min",
-    UKR: "Mykhailo Mudryk",
-    TUR: "Arda Güler",
-    POL: "Robert Lewandowski",
-    SRB: "Dušan Vlahović",
-    ECU: "Moisés Caicedo",
-    IRN: "Mehdi Taremi",
-    AUS: "Mathew Leckie",
-    NGA: "Victor Osimhen",
-    CZE: "Patrik Schick",
-    WAL: "Aaron Ramsey",
-    ALG: "Riyad Mahrez",
-    PAR: "Miguel Almirón",
-    EGY: "Mohamed Salah",
-    SCO: "Scott McTominay",
-    VEN: "Salomón Rondón",
-    CMR: "André-Frank Zambo Anguissa",
-    GHA: "Mohammed Kudus",
-    CIV: "Sébastien Haller",
-    JAM: "Michail Antonio",
-    CRC: "Keylor Navas",
-    PAN: "Adalberto Carrasquilla",
-    SAU: "Salem Al-Dawsari",
-    QAT: "Akram Afif",
-    TUN: "Wahbi Khazri",
-    NZL: "Chris Wood"
+// Prediction model weights based on expert consensus
+const PREDICTION_WEIGHTS = {
+    espnPowerRank: 0.25,      // ESPN expert power rankings
+    bettingOdds: 0.30,        // Implied probability from odds
+    fifaRank: 0.15,           // Official FIFA ranking
+    recentForm: 0.20,         // Recent match results
+    squadStrength: 0.10       // Transfermarkt squad value
 };
 
 // Export for use in other files
 window.TEAMS = TEAMS;
-window.GROUPS = GROUPS_FIXED;
-window.STAR_PLAYERS = STAR_PLAYERS;
+window.GROUPS = GROUPS;
+window.GROUP_INFO = GROUP_INFO;

@@ -93,7 +93,7 @@ class PresentationController {
                 this.showChampion();
                 break;
             case 'champion':
-                this.restart();
+                // Prediction complete - no restart needed
                 break;
         }
     }
@@ -143,7 +143,7 @@ class PresentationController {
                 <div class="group-team">
                     <span class="team-flag">${team.flag}</span>
                     <span class="team-name">${team.name}</span>
-                    <span class="team-rank">#${team.rank}</span>
+                    <span class="team-rank">#${team.fifaRank} FIFA</span>
                 </div>
             `;
         }).join('');
