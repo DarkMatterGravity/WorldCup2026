@@ -1,6 +1,6 @@
 // World Cup 2026 Deterministic Prediction Engine
 // Based on team strength ratings derived from betting odds, FIFA rankings, and expert analysis
-// No randomness - produces the most likely outcome based on available data
+// Produces realistic, varied scorelines based on historical World Cup data
 
 class WorldCupSimulation {
     constructor() {
@@ -17,95 +17,133 @@ class WorldCupSimulation {
         this.runnerUp = null;
         this.allMatches = [];
         this.totalGoals = 0;
+        this.matchIndex = 0; // Used for deterministic variety
     }
 
-    // Deterministic match prediction based on team strengths
-    // Returns expected goals for each team (no randomness)
+    // Realistic scoreline distributions based on World Cup history
+    // Format: [homeGoals, awayGoals, weight]
+    getScoreDistributions() {
+        return {
+            // Huge mismatch (20+ strength diff) - dominant wins
+            huge: [
+                [4, 0, 15], [3, 0, 25], [4, 1, 15], [3, 1, 20], [5, 0, 5],
+                [2, 0, 15], [5, 1, 5]
+            ],
+            // Big favorite (12-20 strength diff)
+            big: [
+                [3, 0, 20], [2, 0, 25], [3, 1, 20], [2, 1, 15], [4, 1, 10],
+                [1, 0, 10]
+            ],
+            // Clear favorite (7-12 strength diff)
+            clear: [
+                [2, 0, 25], [2, 1, 25], [1, 0, 20], [3, 1, 15], [3, 0, 10],
+                [3, 2, 5]
+            ],
+            // Slight favorite (3-7 strength diff)
+            slight: [
+                [1, 0, 30], [2, 1, 25], [2, 0, 20], [1, 1, 15], [3, 2, 5],
+                [0, 0, 5]
+            ],
+            // Toss-up (0-3 strength diff)
+            tossup: [
+                [1, 1, 25], [1, 0, 20], [0, 1, 15], [2, 1, 15], [1, 2, 10],
+                [0, 0, 10], [2, 2, 5]
+            ]
+        };
+    }
+
+    // Select a scoreline deterministically based on match index
+    selectScore(category, strengthDiff, matchIndex, isHomeStronger) {
+        const distributions = this.getScoreDistributions();
+        const scores = distributions[category];
+
+        // Create weighted selection array
+        const weighted = [];
+        scores.forEach(([h, a, weight]) => {
+            for (let i = 0; i < weight; i++) {
+                weighted.push([h, a]);
+            }
+        });
+
+        // Use match index to deterministically select a score
+        const selection = weighted[matchIndex % weighted.length];
+        let [homeGoals, awayGoals] = selection;
+
+        // If away team is stronger, flip the score
+        if (!isHomeStronger && homeGoals !== awayGoals) {
+            [homeGoals, awayGoals] = [awayGoals, homeGoals];
+        }
+
+        return { homeGoals, awayGoals };
+    }
+
+    // Deterministic match prediction with realistic scorelines
     simulateMatch(homeCode, awayCode, isKnockout = false) {
         const home = TEAMS[homeCode];
         const away = TEAMS[awayCode];
+        const strengthDiff = Math.abs(home.strength - away.strength);
+        const isHomeStronger = home.strength >= away.strength;
 
-        // Calculate strength differential
-        const strengthDiff = home.strength - away.strength;
+        // Determine category based on strength difference
+        let category;
+        if (strengthDiff >= 20) category = 'huge';
+        else if (strengthDiff >= 12) category = 'big';
+        else if (strengthDiff >= 7) category = 'clear';
+        else if (strengthDiff >= 3) category = 'slight';
+        else category = 'tossup';
 
-        // Base expected goals (average World Cup match ~2.5 total goals)
-        // Higher strength = more goals scored, fewer conceded
-        const baseGoals = 1.25;
+        // Get deterministic score based on match index
+        let { homeGoals, awayGoals } = this.selectScore(
+            category,
+            strengthDiff,
+            this.matchIndex,
+            isHomeStronger
+        );
 
-        // Goal calculation based on strength differential
-        // Every 10 points of strength difference = ~0.5 goal swing
-        let homeGoals = baseGoals + (strengthDiff / 20);
-        let awayGoals = baseGoals - (strengthDiff / 20);
+        this.matchIndex++;
 
-        // Ensure minimum goals and round to reasonable values
-        homeGoals = Math.max(0, homeGoals);
-        awayGoals = Math.max(0, awayGoals);
-
-        // Round to nearest 0.5 for display, then floor for actual score
-        homeGoals = Math.round(homeGoals * 2) / 2;
-        awayGoals = Math.round(awayGoals * 2) / 2;
-
-        // Convert to integers for final score
-        let homeScore = Math.round(homeGoals);
-        let awayScore = Math.round(awayGoals);
-
-        // Handle draws - in deterministic model, stronger team edges it
+        // Handle knockout draws
         let extraTime = false;
         let penalties = false;
 
-        if (isKnockout && homeScore === awayScore) {
+        if (isKnockout && homeGoals === awayGoals) {
             extraTime = true;
-            // Stronger team wins in extra time or penalties
-            if (home.strength > away.strength) {
-                // Close match goes to penalties, clear favorite wins in ET
-                if (Math.abs(strengthDiff) < 5) {
-                    penalties = true;
-                    homeScore += 0.5; // Indicates penalty win
-                } else {
-                    homeScore += 1;
-                }
-            } else if (away.strength > home.strength) {
-                if (Math.abs(strengthDiff) < 5) {
-                    penalties = true;
-                    awayScore += 0.5;
-                } else {
-                    awayScore += 1;
-                }
-            } else {
-                // Exact same strength - use FIFA ranking as tiebreaker
+            // Stronger team wins - determine method based on how close
+            if (strengthDiff < 3) {
+                // Very close - penalties
                 penalties = true;
-                if (home.fifaRank < away.fifaRank) {
-                    homeScore += 0.5;
+                if (isHomeStronger) {
+                    homeGoals += 0.5;
                 } else {
-                    awayScore += 0.5;
+                    awayGoals += 0.5;
+                }
+            } else if (strengthDiff < 6) {
+                // Close - extra time goal
+                if (isHomeStronger) {
+                    homeGoals += 1;
+                } else {
+                    awayGoals += 1;
+                }
+            } else {
+                // Moderate difference - extra time goal
+                if (isHomeStronger) {
+                    homeGoals += 1;
+                } else {
+                    awayGoals += 1;
                 }
             }
         }
 
-        // For group stage draws, keep them as draws if strengths are very close
-        if (!isKnockout && Math.abs(strengthDiff) < 8 && homeScore === awayScore) {
-            // This is a valid draw, keep it
-        } else if (!isKnockout && homeScore === awayScore) {
-            // Slight edge to stronger team in group stage
-            if (home.strength > away.strength) {
-                homeScore = Math.max(1, homeScore);
-                awayScore = Math.max(0, homeScore - 1);
-            } else {
-                awayScore = Math.max(1, awayScore);
-                homeScore = Math.max(0, awayScore - 1);
-            }
-        }
+        this.totalGoals += Math.floor(homeGoals) + Math.floor(awayGoals);
 
-        this.totalGoals += Math.floor(homeScore) + Math.floor(awayScore);
-
-        const winner = homeScore > awayScore ? homeCode :
-                      (awayScore > homeScore ? awayCode : null);
+        const winner = homeGoals > awayGoals ? homeCode :
+                      (awayGoals > homeGoals ? awayCode : null);
 
         return {
             home: homeCode,
             away: awayCode,
-            homeGoals: homeScore,
-            awayGoals: awayScore,
+            homeGoals: homeGoals,
+            awayGoals: awayGoals,
             extraTime: extraTime,
             penalties: penalties,
             winner: winner
@@ -171,12 +209,12 @@ class WorldCupSimulation {
             }
         }
 
-        // Sort standings by points, then GD, then GF, then strength (as final tiebreaker)
+        // Sort standings by points, then GD, then GF, then strength
         const sortedStandings = Object.values(standings).sort((a, b) => {
             if (b.points !== a.points) return b.points - a.points;
             if (b.goalDiff !== a.goalDiff) return b.goalDiff - a.goalDiff;
             if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
-            return b.strength - a.strength; // Use strength as final tiebreaker
+            return b.strength - a.strength;
         });
 
         this.groupResults[groupLetter] = matches;
@@ -196,9 +234,7 @@ class WorldCupSimulation {
             this.simulateGroup(letter);
         });
 
-        // Collect third place teams and determine best 8
         this.determineThirdPlaceQualifiers();
-
         return this.groupStandings;
     }
 
@@ -212,7 +248,6 @@ class WorldCupSimulation {
             thirdPlaceTeams.push(third);
         });
 
-        // Sort third place teams
         thirdPlaceTeams.sort((a, b) => {
             if (b.points !== a.points) return b.points - a.points;
             if (b.goalDiff !== a.goalDiff) return b.goalDiff - a.goalDiff;
@@ -220,10 +255,7 @@ class WorldCupSimulation {
             return b.strength - a.strength;
         });
 
-        // Best 8 qualify
         this.thirdPlaceTeams = thirdPlaceTeams.slice(0, 8);
-
-        // Build R32 bracket
         this.buildR32Bracket();
     }
 
@@ -241,28 +273,35 @@ class WorldCupSimulation {
 
         const thirdPlace = this.thirdPlaceTeams.map(t => t.code);
 
-        // R32 Matchups following FIFA bracket structure
-        // Winners face 3rd place teams, Runners-up face each other
+        // R32 Matchups - structured for proper bracket flow
         const r32Pairings = [
-            // Left side of bracket
-            [firstPlace['A'], thirdPlace[7]],    // 1A vs best 3rd #8
-            [secondPlace['C'], secondPlace['D']], // 2C vs 2D
-            [firstPlace['B'], thirdPlace[6]],    // 1B vs best 3rd #7
-            [secondPlace['A'], secondPlace['B']], // 2A vs 2B
-            [firstPlace['C'], thirdPlace[5]],    // 1C vs best 3rd #6
-            [secondPlace['E'], secondPlace['F']], // 2E vs 2F
-            [firstPlace['D'], thirdPlace[4]],    // 1D vs best 3rd #5
-            [secondPlace['G'], secondPlace['H']], // 2G vs 2H
+            // Bracket 1 (feeds to QF1)
+            [firstPlace['A'], thirdPlace[7]],
+            [secondPlace['C'], secondPlace['D']],
+            // Bracket 2 (feeds to QF1)
+            [firstPlace['B'], thirdPlace[6]],
+            [secondPlace['A'], secondPlace['B']],
 
-            // Right side of bracket
-            [firstPlace['E'], thirdPlace[3]],    // 1E vs best 3rd #4
-            [secondPlace['I'], secondPlace['J']], // 2I vs 2J
-            [firstPlace['F'], thirdPlace[2]],    // 1F vs best 3rd #3
-            [secondPlace['K'], secondPlace['L']], // 2K vs 2L
-            [firstPlace['G'], thirdPlace[1]],    // 1G vs best 3rd #2
-            [firstPlace['H'], secondPlace['I']], // 1H vs 2I
-            [firstPlace['I'], thirdPlace[0]],    // 1I vs best 3rd #1
-            [firstPlace['J'], firstPlace['K']]   // 1J vs 1K (tough draw)
+            // Bracket 3 (feeds to QF2)
+            [firstPlace['C'], thirdPlace[5]],
+            [secondPlace['E'], secondPlace['F']],
+            // Bracket 4 (feeds to QF2)
+            [firstPlace['D'], thirdPlace[4]],
+            [secondPlace['G'], secondPlace['H']],
+
+            // Bracket 5 (feeds to QF3)
+            [firstPlace['E'], thirdPlace[3]],
+            [secondPlace['I'], secondPlace['J']],
+            // Bracket 6 (feeds to QF3)
+            [firstPlace['F'], thirdPlace[2]],
+            [secondPlace['K'], secondPlace['L']],
+
+            // Bracket 7 (feeds to QF4)
+            [firstPlace['G'], thirdPlace[1]],
+            [firstPlace['H'], secondPlace['I']],
+            // Bracket 8 (feeds to QF4)
+            [firstPlace['I'], thirdPlace[0]],
+            [firstPlace['J'], firstPlace['K']]
         ];
 
         this.knockoutResults.r32 = r32Pairings.map((pair, index) => ({
@@ -283,18 +322,13 @@ class WorldCupSimulation {
         matchups.forEach((matchup, index) => {
             const result = this.simulateMatch(matchup.home, matchup.away, true);
             result.matchNumber = index + 1;
-
-            // Determine winner (considering penalty wins)
-            const winner = result.homeGoals > result.awayGoals ? result.home : result.away;
-
-            result.winner = winner;
+            result.winner = result.homeGoals > result.awayGoals ? result.home : result.away;
             results.push(result);
-            winners.push(winner);
+            winners.push(result.winner);
             this.allMatches.push(result);
         });
 
         this.knockoutResults[roundName] = results;
-
         return { results, winners };
     }
 
@@ -303,7 +337,7 @@ class WorldCupSimulation {
         const { results, winners } = this.simulateKnockoutRound('r32', this.knockoutResults.r32);
         this.r16Teams = winners;
 
-        // Create R16 matchups (winners play each other in bracket order)
+        // Create R16 matchups (adjacent R32 winners play each other)
         this.knockoutResults.r16 = [];
         for (let i = 0; i < winners.length; i += 2) {
             this.knockoutResults.r16.push({
@@ -322,7 +356,6 @@ class WorldCupSimulation {
         const { results, winners } = this.simulateKnockoutRound('r16', this.knockoutResults.r16);
         this.qfTeams = winners;
 
-        // Create QF matchups
         this.knockoutResults.qf = [];
         for (let i = 0; i < winners.length; i += 2) {
             this.knockoutResults.qf.push({
@@ -341,7 +374,6 @@ class WorldCupSimulation {
         const { results, winners } = this.simulateKnockoutRound('qf', this.knockoutResults.qf);
         this.sfTeams = winners;
 
-        // Create SF matchups
         this.knockoutResults.sf = [];
         for (let i = 0; i < winners.length; i += 2) {
             this.knockoutResults.sf.push({
@@ -360,7 +392,6 @@ class WorldCupSimulation {
         const { results, winners } = this.simulateKnockoutRound('sf', this.knockoutResults.sf);
         this.finalists = winners;
 
-        // Create Final matchup
         this.knockoutResults.final = [{
             matchNumber: 1,
             home: winners[0],
@@ -376,7 +407,6 @@ class WorldCupSimulation {
         const { results, winners } = this.simulateKnockoutRound('final', this.knockoutResults.final);
         this.champion = winners[0];
         this.runnerUp = this.finalists.find(t => t !== this.champion);
-
         return results[0];
     }
 
@@ -385,7 +415,6 @@ class WorldCupSimulation {
         const matchCount = this.allMatches.length;
         const avgGoals = matchCount > 0 ? (this.totalGoals / matchCount).toFixed(2) : 0;
 
-        // Find biggest win
         let biggestWin = null;
         let biggestMargin = 0;
 
@@ -407,21 +436,16 @@ class WorldCupSimulation {
         };
     }
 
-    // Format score for display
     formatScore(match) {
         const homeGoals = Math.floor(match.homeGoals);
         const awayGoals = Math.floor(match.awayGoals);
 
         let suffix = '';
-        if (match.penalties) {
-            suffix = ' (P)';
-        } else if (match.extraTime) {
-            suffix = ' (AET)';
-        }
+        if (match.penalties) suffix = ' (P)';
+        else if (match.extraTime) suffix = ' (AET)';
 
         return `${homeGoals} - ${awayGoals}${suffix}`;
     }
 }
 
-// Export
 window.WorldCupSimulation = WorldCupSimulation;
