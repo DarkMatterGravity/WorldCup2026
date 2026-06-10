@@ -19,7 +19,7 @@
     /* Text */
     --text-primary: #f0f0f5;
     --text-secondary: #b0b0c0;
-    --text-muted: #6a6a7a;
+    --text-muted: #9595a8;
 
     /* Status */
     --win-green: #22c55e;
@@ -153,7 +153,7 @@ body {
 }
 
 .start-prompt, .continue-prompt {
-    color: var(--text-muted);
+    color: #a8b8c8;
     font-size: 0.9rem;
     margin-top: 40px;
 }

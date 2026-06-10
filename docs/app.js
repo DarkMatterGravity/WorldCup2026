@@ -45,6 +45,9 @@ class PresentationController {
                 this.startGroupStage();
                 break;
             case 'groupDisplay':
+                this.revealGroupScores();
+                break;
+            case 'groupScores':
                 this.showGroupResults();
                 break;
             case 'groupResults':
@@ -170,6 +173,12 @@ class PresentationController {
 
         document.getElementById('groupMatches').innerHTML = matchesHtml;
 
+        // Reset prompt text
+        const prompt = document.querySelector('#groupSlide .continue-prompt');
+        if (prompt) {
+            prompt.textContent = 'Tap to reveal scores →';
+        }
+
         // Transition
         const fromSlide = index === 0 ? 'groupIntroSlide' : 'groupResultsSlide';
         this.transitionSlide(fromSlide, 'groupSlide');
@@ -179,12 +188,11 @@ class PresentationController {
         this.updateProgress(progress, `Group ${letter}`);
     }
 
-    showGroupResults() {
+    revealGroupScores() {
         const letter = this.groupLetters[this.currentGroup];
-        const standings = this.simulation.groupStandings[letter];
         const matches = this.simulation.groupResults[letter];
 
-        // First, reveal match scores with animation
+        // Reveal match scores with animation
         const matchRows = document.querySelectorAll('#groupMatches .match-row');
         matches.forEach((match, i) => {
             setTimeout(() => {
@@ -199,83 +207,92 @@ class PresentationController {
             }, i * 150);
         });
 
-        // After scores revealed, show standings
-        setTimeout(() => {
-            document.getElementById('resultGroupLetter').textContent = letter;
+        // Update prompt text
+        const prompt = document.querySelector('#groupSlide .continue-prompt');
+        if (prompt) {
+            prompt.textContent = 'Tap to see standings →';
+        }
 
-            const standingsHtml = `
-                <div class="standings-header">
-                    <span>#</span>
-                    <span>Team</span>
-                    <span>P</span>
-                    <span>W</span>
-                    <span>D</span>
-                    <span>L</span>
-                    <span>Pts</span>
-                </div>
-                ${standings.map((team, i) => {
-                    let rowClass = '';
-                    if (i < 2) rowClass = 'qualified';
-                    else if (i === 2) {
-                        const isQualified = this.simulation.thirdPlaceTeams.some(t => t.code === team.code);
-                        rowClass = isQualified ? 'third-qualified' : 'eliminated';
-                    }
-                    else rowClass = 'eliminated';
+        this.currentState = 'groupScores';
+    }
 
-                    return `
-                        <div class="standings-row ${rowClass}">
-                            <span class="standings-pos">${i + 1}</span>
-                            <div class="standings-team">
-                                <span class="team-flag">${TEAMS[team.code].flag}</span>
-                                <span class="team-name">${TEAMS[team.code].name}</span>
-                            </div>
-                            <span>${team.played}</span>
-                            <span>${team.won}</span>
-                            <span>${team.drawn}</span>
-                            <span>${team.lost}</span>
-                            <span class="standings-pts">${team.points}</span>
+    showGroupResults() {
+        const letter = this.groupLetters[this.currentGroup];
+        const standings = this.simulation.groupStandings[letter];
+
+        document.getElementById('resultGroupLetter').textContent = letter;
+
+        const standingsHtml = `
+            <div class="standings-header">
+                <span>#</span>
+                <span>Team</span>
+                <span>P</span>
+                <span>W</span>
+                <span>D</span>
+                <span>L</span>
+                <span>Pts</span>
+            </div>
+            ${standings.map((team, i) => {
+                let rowClass = '';
+                if (i < 2) rowClass = 'qualified';
+                else if (i === 2) {
+                    const isQualified = this.simulation.thirdPlaceTeams.some(t => t.code === team.code);
+                    rowClass = isQualified ? 'third-qualified' : 'eliminated';
+                }
+                else rowClass = 'eliminated';
+
+                return `
+                    <div class="standings-row ${rowClass}">
+                        <span class="standings-pos">${i + 1}</span>
+                        <div class="standings-team">
+                            <span class="team-flag">${TEAMS[team.code].flag}</span>
+                            <span class="team-name">${TEAMS[team.code].name}</span>
                         </div>
-                    `;
-                }).join('')}
-            `;
-
-            document.getElementById('standingsTable').innerHTML = standingsHtml;
-
-            // Qualifiers display
-            const first = standings[0];
-            const second = standings[1];
-            const third = standings[2];
-            const thirdQualified = this.simulation.thirdPlaceTeams.some(t => t.code === third.code);
-
-            let qualifiersHtml = `
-                <div class="qualifier-label">Advancing to Knockout Stage</div>
-                <div class="qualifier-teams">
-                    <div class="qualifier-team">
-                        <span class="team-flag">${TEAMS[first.code].flag}</span>
-                        <span class="team-name">${TEAMS[first.code].name}</span>
-                        <span class="position">Group Winner</span>
+                        <span>${team.played}</span>
+                        <span>${team.won}</span>
+                        <span>${team.drawn}</span>
+                        <span>${team.lost}</span>
+                        <span class="standings-pts">${team.points}</span>
                     </div>
-                    <div class="qualifier-team">
-                        <span class="team-flag">${TEAMS[second.code].flag}</span>
-                        <span class="team-name">${TEAMS[second.code].name}</span>
-                        <span class="position">Runner-up</span>
-                    </div>
-                    ${thirdQualified ? `
-                        <div class="qualifier-team third">
-                            <span class="team-flag">${TEAMS[third.code].flag}</span>
-                            <span class="team-name">${TEAMS[third.code].name}</span>
-                            <span class="position">Best 3rd Place</span>
-                        </div>
-                    ` : ''}
+                `;
+            }).join('')}
+        `;
+
+        document.getElementById('standingsTable').innerHTML = standingsHtml;
+
+        // Qualifiers display
+        const first = standings[0];
+        const second = standings[1];
+        const third = standings[2];
+        const thirdQualified = this.simulation.thirdPlaceTeams.some(t => t.code === third.code);
+
+        let qualifiersHtml = `
+            <div class="qualifier-label">Advancing to Knockout Stage</div>
+            <div class="qualifier-teams">
+                <div class="qualifier-team">
+                    <span class="team-flag">${TEAMS[first.code].flag}</span>
+                    <span class="team-name">${TEAMS[first.code].name}</span>
+                    <span class="position">Group Winner</span>
                 </div>
-            `;
+                <div class="qualifier-team">
+                    <span class="team-flag">${TEAMS[second.code].flag}</span>
+                    <span class="team-name">${TEAMS[second.code].name}</span>
+                    <span class="position">Runner-up</span>
+                </div>
+                ${thirdQualified ? `
+                    <div class="qualifier-team third">
+                        <span class="team-flag">${TEAMS[third.code].flag}</span>
+                        <span class="team-name">${TEAMS[third.code].name}</span>
+                        <span class="position">Best 3rd Place</span>
+                    </div>
+                ` : ''}
+            </div>
+        `;
 
-            document.getElementById('qualifiersDisplay').innerHTML = qualifiersHtml;
+        document.getElementById('qualifiersDisplay').innerHTML = qualifiersHtml;
 
-            this.transitionSlide('groupSlide', 'groupResultsSlide');
-            this.currentState = 'groupResults';
-
-        }, matches.length * 150 + 500);
+        this.transitionSlide('groupSlide', 'groupResultsSlide');
+        this.currentState = 'groupResults';
     }
 
     nextGroup() {
@@ -508,7 +525,7 @@ class PresentationController {
                     </div>
                 </div>
             </div>
-            <div class="continue-prompt">Click to begin semi-finals →</div>
+            <div class="continue-prompt">Tap to begin semi-finals →</div>
         `;
 
         this.transitionSlide('knockoutResultSlide', 'semiIntroSlide');
@@ -555,7 +572,7 @@ class PresentationController {
                     <span class="team-name">${TEAMS[finalists[1]].name}</span>
                 </div>
             </div>
-            <div class="continue-prompt">Click to reveal the World Cup Champion →</div>
+            <div class="continue-prompt">Tap to reveal the World Cup Champion →</div>
         `;
 
         this.transitionSlide('knockoutResultSlide', 'finalIntroSlide');
