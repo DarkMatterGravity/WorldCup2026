@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Cup 2026 Prediction Results</title>
+    <style>
+        @page {
+            size: letter landscape;
+            margin: 0.4in;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #0a0a14;
+            color: #f0f0f5;
+            padding: 20px;
+            font-size: 9px;
+            line-height: 1.3;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+                font-size: 8px;
+            }
+            .no-print { display: none; }
+            .group { border-color: #ccc !important; }
+            .bracket-match { border-color: #ccc !important; background: #f5f5f5 !important; }
+            .winner { background: #d4edda !important; }
+            h1, h2, h3 { color: black !important; }
+            .champion-box { background: #fff3cd !important; border-color: #ffc107 !important; }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #6B2D5B;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            background: linear-gradient(135deg, #6B2D5B, #A4195C, #00A5B5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 3px;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 10px;
+        }
+
+        .content {
+            display: flex;
+            gap: 15px;
+        }
+
+        .groups-section {
+            flex: 0 0 55%;
+        }
+
+        .bracket-section {
+            flex: 0 0 43%;
+        }
+
+        h2 {
+            font-size: 12px;
+            color: #00A5B5;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .group {
+            background: #1a1a2e;
+            border: 1px solid #2a2a3e;
+            border-radius: 4px;
+            padding: 6px;
+        }
+
+        .group h3 {
+            font-size: 10px;
+            color: #A4195C;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+        .standings-table {
+            width: 100%;
+            font-size: 8px;
+        }
+
+        .standings-table th {
+            text-align: left;
+            color: #888;
+            font-weight: normal;
+            padding: 2px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .standings-table td {
+            padding: 2px 0;
+        }
+
+        .standings-table .pos { width: 12px; color: #666; }
+        .standings-table .team { }
+        .standings-table .flag { font-size: 10px; margin-right: 3px; }
+        .standings-table .pts { text-align: right; font-weight: bold; color: #00A5B5; width: 20px; }
+        .standings-table .gd { text-align: right; color: #888; width: 20px; }
+
+        .standings-table tr.qualified td { background: rgba(0, 165, 181, 0.1); }
+        .standings-table tr.third-qualified td { background: rgba(212, 175, 55, 0.1); }
+        .standings-table tr.eliminated td { opacity: 0.5; }
+
+        .bracket-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .bracket-round {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .round-label {
+            width: 100%;
+            font-size: 9px;
+            color: #A4195C;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .bracket-match {
+            background: #1a1a2e;
+            border: 1px solid #2a2a3e;
+            border-radius: 3px;
+            padding: 3px 5px;
+            font-size: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .bracket-match .team {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .bracket-match .flag { font-size: 10px; }
+        .bracket-match .name { min-width: 50px; }
+        .bracket-match .score { font-weight: bold; min-width: 12px; text-align: center; }
+        .bracket-match .vs { color: #666; }
+        .bracket-match .winner .name { color: #22c55e; font-weight: bold; }
+        .bracket-match .loser { opacity: 0.5; }
+        .bracket-match .result-note { font-size: 7px; color: #888; margin-left: 4px; }
+
+        .r32-matches { }
+        .r32-matches .bracket-match { flex: 0 0 calc(25% - 3px); }
+
+        .r16-matches .bracket-match { flex: 0 0 calc(25% - 3px); }
+
+        .qf-matches .bracket-match { flex: 0 0 calc(25% - 3px); }
+
+        .sf-matches .bracket-match { flex: 0 0 calc(50% - 2px); }
+
+        .final-section {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .champion-box {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(164, 25, 92, 0.2));
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            padding: 10px 25px;
+        }
+
+        .champion-box .trophy { font-size: 24px; }
+        .champion-box .label { font-size: 8px; color: #D4AF37; letter-spacing: 2px; margin: 3px 0; }
+        .champion-box .winner-flag { font-size: 28px; }
+        .champion-box .winner-name { font-size: 14px; font-weight: bold; color: #D4AF37; }
+        .champion-box .final-score { font-size: 9px; color: #888; margin-top: 3px; }
+
+        .footer {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 7px;
+            color: #666;
+            border-top: 1px solid #333;
+            padding-top: 8px;
+        }
+
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #A4195C, #00A5B5);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .print-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button>
+
+    <div class="header">
+        <h1>FIFA WORLD CUP 2026 — PREDICTED RESULTS</h1>
+        <p>Data-driven prediction based on FIFA rankings, ELO ratings, betting odds, and expert analysis</p>
+    </div>
+
+    <div class="content">
+        <div class="groups-section">
+            <h2>Group Stage Final Standings</h2>
+            <div class="groups-grid" id="groupsGrid">
+                <!-- Groups will be inserted here -->
+            </div>
+        </div>
+
+        <div class="bracket-section">
+            <h2>Knockout Stage</h2>
+            <div class="bracket-container">
+                <div class="bracket-round r32-matches">
+                    <div class="round-label">Round of 32</div>
+                    <div id="r32Matches"></div>
+                </div>
+                <div class="bracket-round r16-matches">
+                    <div class="round-label">Round of 16</div>
+                    <div id="r16Matches" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+                </div>
+                <div class="bracket-round qf-matches">
+                    <div class="round-label">Quarter Finals</div>
+                    <div id="qfMatches" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+                </div>
+                <div class="bracket-round sf-matches">
+                    <div class="round-label">Semi Finals</div>
+                    <div id="sfMatches" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+                </div>
+            </div>
+
+            <div class="final-section">
+                <div class="champion-box">
+                    <div class="trophy">🏆</div>
+                    <div class="label">WORLD CUP CHAMPION</div>
+                    <div class="winner-flag" id="championFlag"></div>
+                    <div class="winner-name" id="championName"></div>
+                    <div class="final-score" id="finalScore"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Prediction generated using team strength ratings derived from betting odds (+450 to +500000), FIFA rankings, and ESPN expert analysis.</p>
+        <p>Top favorites: Spain (+450), France (+500), England (+700), Brazil (+800), Portugal (+900), Argentina (+900)</p>
+    </div>
+
+    <script src="teams.js"></script>
+    <script src="simulation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sim = new WorldCupSimulation();
+
+            // Run full simulation
+            sim.simulateAllGroups();
+            sim.simulateR32();
+            sim.simulateR16();
+            sim.simulateQF();
+            sim.simulateSF();
+            const finalResult = sim.simulateFinal();
+
+            // Render groups
+            const groupsGrid = document.getElementById('groupsGrid');
+            const groupLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+
+            groupLetters.forEach(letter => {
+                const standings = sim.groupStandings[letter];
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'group';
+
+                let html = `<h3>Group ${letter}</h3>`;
+                html += `<table class="standings-table">`;
+                html += `<tr><th class="pos">#</th><th class="team">Team</th><th class="gd">GD</th><th class="pts">Pts</th></tr>`;
+
+                standings.forEach((team, i) => {
+                    let rowClass = '';
+                    if (i < 2) rowClass = 'qualified';
+                    else if (i === 2) {
+                        const isQualified = sim.thirdPlaceTeams.some(t => t.code === team.code);
+                        rowClass = isQualified ? 'third-qualified' : 'eliminated';
+                    } else {
+                        rowClass = 'eliminated';
+                    }
+
+                    const t = TEAMS[team.code];
+                    const gdStr = team.goalDiff >= 0 ? `+${team.goalDiff}` : team.goalDiff;
+                    html += `<tr class="${rowClass}">
+                        <td class="pos">${i + 1}</td>
+                        <td class="team"><span class="flag">${t.flag}</span>${t.name}</td>
+                        <td class="gd">${gdStr}</td>
+                        <td class="pts">${team.points}</td>
+                    </tr>`;
+                });
+
+                html += `</table>`;
+                groupDiv.innerHTML = html;
+                groupsGrid.appendChild(groupDiv);
+            });
+
+            // Render knockout matches
+            function renderMatches(containerId, matches) {
+                const container = document.getElementById(containerId);
+                container.style.display = 'flex';
+                container.style.flexWrap = 'wrap';
+                container.style.gap = '4px';
+
+                matches.forEach(match => {
+                    const home = TEAMS[match.home];
+                    const away = TEAMS[match.away];
+                    const isHomeWinner = match.winner === match.home;
+
+                    let note = '';
+                    if (match.penalties) note = '(P)';
+                    else if (match.extraTime) note = '(AET)';
+
+                    const matchDiv = document.createElement('div');
+                    matchDiv.className = 'bracket-match';
+                    matchDiv.style.flex = containerId === 'sfMatches' ? '0 0 calc(50% - 2px)' : '0 0 calc(25% - 3px)';
+
+                    matchDiv.innerHTML = `
+                        <div class="team ${isHomeWinner ? 'winner' : 'loser'}">
+                            <span class="flag">${home.flag}</span>
+                            <span class="name">${home.name}</span>
+                            <span class="score">${Math.floor(match.homeGoals)}</span>
+                        </div>
+                        <span class="vs">-</span>
+                        <div class="team ${!isHomeWinner ? 'winner' : 'loser'}">
+                            <span class="score">${Math.floor(match.awayGoals)}</span>
+                            <span class="name">${away.name}</span>
+                            <span class="flag">${away.flag}</span>
+                        </div>
+                        ${note ? `<span class="result-note">${note}</span>` : ''}
+                    `;
+
+                    container.appendChild(matchDiv);
+                });
+            }
+
+            renderMatches('r32Matches', sim.knockoutResults.r32);
+            renderMatches('r16Matches', sim.knockoutResults.r16);
+            renderMatches('qfMatches', sim.knockoutResults.qf);
+            renderMatches('sfMatches', sim.knockoutResults.sf);
+
+            // Champion
+            const champion = TEAMS[sim.champion];
+            const runnerUp = TEAMS[sim.runnerUp];
+            const final = sim.knockoutResults.final[0];
+
+            let scoreText = `${Math.floor(final.homeGoals)} - ${Math.floor(final.awayGoals)}`;
+            if (final.penalties) scoreText += ' (Penalties)';
+            else if (final.extraTime) scoreText += ' (AET)';
+
+            document.getElementById('championFlag').textContent = champion.flag;
+            document.getElementById('championName').textContent = champion.name;
+            document.getElementById('finalScore').textContent = `Final: ${champion.name} ${scoreText} ${runnerUp.name}`;
+        });
+    </script>
+</body>
+</html>
