@@ -29,7 +29,7 @@ const TEAMS = {
     // TIER 3: Dark Horses (odds +5000 to +15000)
     JPN: { name: "Japan", flag: "🇯🇵", code: "JPN", fifaRank: 16, strength: 77, odds: "+6000", tier: 3 },
     MAR: { name: "Morocco", flag: "🇲🇦", code: "MAR", fifaRank: 17, strength: 74, odds: "+5000", tier: 3 },
-    USA: { name: "USA", flag: "🇺🇸", code: "USA", fifaRank: 11, strength: 76, odds: "+5000", tier: 3 },
+    USA: { name: "USA", flag: "🇺🇸", code: "USA", fifaRank: 11, strength: 79, odds: "+5000", tier: 3 },
     MEX: { name: "Mexico", flag: "🇲🇽", code: "MEX", fifaRank: 14, strength: 75, odds: "+8000", tier: 3 },
     SUI: { name: "Switzerland", flag: "🇨🇭", code: "SUI", fifaRank: 19, strength: 75, odds: "+10000", tier: 3 },
     SEN: { name: "Senegal", flag: "🇸🇳", code: "SEN", fifaRank: 21, strength: 74, odds: "+15000", tier: 3 },
