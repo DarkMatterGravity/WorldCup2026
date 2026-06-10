@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bracket Test Output</title>
+    <style>
+        body { font-family: monospace; background: #1a1a2e; color: #f0f0f5; padding: 20px; }
+        h2 { color: #00A5B5; border-bottom: 1px solid #444; padding-bottom: 5px; }
+        h3 { color: #A4195C; }
+        .match { margin: 5px 0; padding: 5px; background: #252540; border-radius: 4px; }
+        .winner { color: #22c55e; font-weight: bold; }
+        .loser { opacity: 0.5; }
+        .knockout { margin-left: 20px; }
+    </style>
+</head>
+<body>
+    <h1>World Cup 2026 - Full Bracket Prediction</h1>
+    <pre id="output"></pre>
+
+    <script src="teams.js"></script>
+    <script src="simulation.js"></script>
+    <script>
+        const sim = new WorldCupSimulation();
+        let output = '';
+
+        function log(text) {
+            output += text + '\n';
+        }
+
+        // Run simulation
+        sim.simulateAllGroups();
+
+        log('═══════════════════════════════════════════════════════════');
+        log('                    GROUP STAGE WINNERS');
+        log('═══════════════════════════════════════════════════════════\n');
+
+        ['A','B','C','D','E','F','G','H','I','J','K','L'].forEach(g => {
+            const winner = sim.groupStandings[g][0];
+            const runnerUp = sim.groupStandings[g][1];
+            const t1 = TEAMS[winner.code];
+            const t2 = TEAMS[runnerUp.code];
+            log(`Group ${g}: 1st ${t1.flag} ${t1.name} (${winner.points}pts) | 2nd ${t2.flag} ${t2.name} (${runnerUp.points}pts)`);
+        });
+
+        log('\n═══════════════════════════════════════════════════════════');
+        log('                      ROUND OF 32');
+        log('═══════════════════════════════════════════════════════════\n');
+
+        sim.simulateR32();
+        sim.knockoutResults.r32.forEach(m => {
+            const home = TEAMS[m.home];
+            const away = TEAMS[m.away];
+            const winner = TEAMS[m.winner];
+            const note = m.penalties ? ' (PEN)' : m.extraTime ? ' (AET)' : '';
+            log(`M${m.matchNumber}: ${home.flag} ${home.name} ${Math.floor(m.homeGoals)}-${Math.floor(m.awayGoals)} ${away.name} ${away.flag}${note} → ${winner.flag} ${winner.name} advances`);
+        });
+
+        log('\n═══════════════════════════════════════════════════════════');
+        log('                      ROUND OF 16');
+        log('═══════════════════════════════════════════════════════════\n');
+
+        sim.simulateR16();
+        sim.knockoutResults.r16.forEach(m => {
+            const home = TEAMS[m.home];
+            const away = TEAMS[m.away];
+            const winner = TEAMS[m.winner];
+            const note = m.penalties ? ' (PEN)' : m.extraTime ? ' (AET)' : '';
+            log(`M${m.matchNumber}: ${home.flag} ${home.name} ${Math.floor(m.homeGoals)}-${Math.floor(m.awayGoals)} ${away.name} ${away.flag}${note} → ${winner.flag} ${winner.name} advances`);
+        });
+
+        log('\n═══════════════════════════════════════════════════════════');
+        log('                    QUARTER FINALS');
+        log('═══════════════════════════════════════════════════════════\n');
+
+        sim.simulateQF();
+        sim.knockoutResults.qf.forEach(m => {
+            const home = TEAMS[m.home];
+            const away = TEAMS[m.away];
+            const winner = TEAMS[m.winner];
+            const note = m.penalties ? ' (PEN)' : m.extraTime ? ' (AET)' : '';
+            log(`M${m.matchNumber}: ${home.flag} ${home.name} ${Math.floor(m.homeGoals)}-${Math.floor(m.awayGoals)} ${away.name} ${away.flag}${note} → ${winner.flag} ${winner.name} advances`);
+        });
+
+        log('\n═══════════════════════════════════════════════════════════');
+        log('                     SEMI FINALS');
+        log('═══════════════════════════════════════════════════════════\n');
+
+        sim.simulateSF();
+        sim.knockoutResults.sf.forEach(m => {
+            const home = TEAMS[m.home];
+            const away = TEAMS[m.away];
+            const winner = TEAMS[m.winner];
+            const note = m.penalties ? ' (PEN)' : m.extraTime ? ' (AET)' : '';
+            log(`M${m.matchNumber}: ${home.flag} ${home.name} ${Math.floor(m.homeGoals)}-${Math.floor(m.awayGoals)} ${away.name} ${away.flag}${note} → ${winner.flag} ${winner.name} advances to FINAL`);
+        });
+
+        log('\n═══════════════════════════════════════════════════════════');
+        log('                       THE FINAL');
+        log('═══════════════════════════════════════════════════════════\n');
+
+        const final = sim.simulateFinal();
+        const home = TEAMS[final.home];
+        const away = TEAMS[final.away];
+        const champion = TEAMS[sim.champion];
+        const note = final.penalties ? ' (PEN)' : final.extraTime ? ' (AET)' : '';
+
+        log(`M104: ${home.flag} ${home.name} ${Math.floor(final.homeGoals)}-${Math.floor(final.awayGoals)} ${away.name} ${away.flag}${note}`);
+        log('');
+        log('═══════════════════════════════════════════════════════════');
+        log(`        🏆 ${champion.flag} ${champion.name.toUpperCase()} ARE WORLD CHAMPIONS! 🏆`);
+        log('═══════════════════════════════════════════════════════════');
+
+        // Stats
+        const stats = sim.getStats();
+        log(`\nTournament Stats:`);
+        log(`- Total Goals: ${stats.totalGoals}`);
+        log(`- Avg Goals/Match: ${stats.avgGoals}`);
+
+        document.getElementById('output').textContent = output;
+    </script>
+</body>
+</html>
