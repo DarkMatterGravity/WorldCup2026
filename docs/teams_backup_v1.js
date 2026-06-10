@@ -15,7 +15,7 @@ const TEAMS = {
     ENG: { name: "England", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", code: "ENG", fifaRank: 4, strength: 91, odds: "+700", tier: 1 },
     BRA: { name: "Brazil", flag: "🇧🇷", code: "BRA", fifaRank: 6, strength: 90, odds: "+800", tier: 1 },
     POR: { name: "Portugal", flag: "🇵🇹", code: "POR", fifaRank: 5, strength: 89, odds: "+900", tier: 1 },
-    ARG: { name: "Argentina", flag: "🇦🇷", code: "ARG", fifaRank: 1, strength: 91, odds: "+900", tier: 1 },
+    ARG: { name: "Argentina", flag: "🇦🇷", code: "ARG", fifaRank: 1, strength: 88, odds: "+900", tier: 1 },
 
     // TIER 2: Contenders (odds +1400 to +4000)
     GER: { name: "Germany", flag: "🇩🇪", code: "GER", fifaRank: 8, strength: 85, odds: "+1400", tier: 2 },
@@ -28,7 +28,7 @@ const TEAMS = {
 
     // TIER 3: Dark Horses (odds +5000 to +15000)
     JPN: { name: "Japan", flag: "🇯🇵", code: "JPN", fifaRank: 16, strength: 77, odds: "+6000", tier: 3 },
-    MAR: { name: "Morocco", flag: "🇲🇦", code: "MAR", fifaRank: 17, strength: 74, odds: "+5000", tier: 3 },
+    MAR: { name: "Morocco", flag: "🇲🇦", code: "MAR", fifaRank: 17, strength: 77, odds: "+5000", tier: 3 },
     USA: { name: "USA", flag: "🇺🇸", code: "USA", fifaRank: 11, strength: 76, odds: "+5000", tier: 3 },
     MEX: { name: "Mexico", flag: "🇲🇽", code: "MEX", fifaRank: 14, strength: 75, odds: "+8000", tier: 3 },
     SUI: { name: "Switzerland", flag: "🇨🇭", code: "SUI", fifaRank: 19, strength: 75, odds: "+10000", tier: 3 },

@@ -149,7 +149,7 @@
             border: 1px solid #2a2a3e;
             border-radius: 2px;
             padding: 2px 4px;
-            width: 75px;
+            width: 105px;
             flex-shrink: 0;
         }
 
@@ -168,7 +168,7 @@
         }
 
         .match-team .flag { font-size: 9px; }
-        .match-team .code { font-weight: 500; }
+        .match-team .name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70px; }
         .match-team .score { font-weight: bold; min-width: 8px; text-align: right; }
 
         .winner-team {
@@ -177,7 +177,7 @@
             padding: 1px 2px;
             margin: -1px -2px;
         }
-        .winner-team .code { color: #22c55e; }
+        .winner-team .name { color: #22c55e; }
         .loser-team { opacity: 0.5; }
 
         .match-note {
@@ -348,11 +348,11 @@
 
                 return `<div class="match-box">
                     <div class="match-team ${hw ? 'winner-team' : 'loser-team'}">
-                        <div class="team-info"><span class="flag">${home.flag}</span><span class="code">${home.code}</span></div>
+                        <div class="team-info"><span class="flag">${home.flag}</span><span class="name">${home.name}</span></div>
                         <span class="score">${Math.floor(match.homeGoals)}</span>
                     </div>
                     <div class="match-team ${!hw ? 'winner-team' : 'loser-team'}">
-                        <div class="team-info"><span class="flag">${away.flag}</span><span class="code">${away.code}</span></div>
+                        <div class="team-info"><span class="flag">${away.flag}</span><span class="name">${away.name}</span></div>
                         <span class="score">${Math.floor(match.awayGoals)}</span>
                     </div>
                     ${note ? `<div class="match-note">${note}</div>` : ''}
