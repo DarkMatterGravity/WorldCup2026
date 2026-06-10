@@ -7,7 +7,7 @@
     <style>
         @page {
             size: letter landscape;
-            margin: 0.3in;
+            margin: 0.25in;
         }
 
         * {
@@ -20,7 +20,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             background: #0a0a14;
             color: #f0f0f5;
-            padding: 15px;
+            padding: 12px;
             font-size: 8px;
             line-height: 1.2;
         }
@@ -36,21 +36,20 @@
             .group { border-color: #ddd !important; background: #fafafa !important; }
             .match-box { border-color: #ccc !important; background: #f5f5f5 !important; }
             .winner-team { background: #d4edda !important; }
-            .loser-team { background: #f8f9fa !important; }
             h1, h2, h3 { color: black !important; }
             .champion-box { background: #fff3cd !important; border-color: #ffc107 !important; }
-            .connector { border-color: #999 !important; }
+            .connector-line { border-color: #999 !important; }
         }
 
         .header {
             text-align: center;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
             border-bottom: 2px solid #6B2D5B;
         }
 
         .header h1 {
-            font-size: 18px;
+            font-size: 16px;
             background: linear-gradient(135deg, #6B2D5B, #A4195C, #00A5B5);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -59,27 +58,28 @@
 
         .header p {
             color: #888;
-            font-size: 9px;
+            font-size: 8px;
             margin-top: 2px;
         }
 
         .content {
             display: flex;
-            gap: 12px;
+            gap: 15px;
         }
 
         .groups-section {
-            flex: 0 0 38%;
+            flex: 0 0 280px;
         }
 
         .bracket-section {
-            flex: 0 0 60%;
+            flex: 1;
+            overflow-x: auto;
         }
 
         h2 {
-            font-size: 10px;
+            font-size: 9px;
             color: #00A5B5;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -88,18 +88,18 @@
         .groups-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 5px;
+            gap: 4px;
         }
 
         .group {
             background: #1a1a2e;
             border: 1px solid #2a2a3e;
             border-radius: 3px;
-            padding: 4px;
+            padding: 3px;
         }
 
         .group h3 {
-            font-size: 8px;
+            font-size: 7px;
             color: #A4195C;
             margin-bottom: 2px;
             text-align: center;
@@ -107,21 +107,14 @@
 
         .standings-table {
             width: 100%;
-            font-size: 7px;
-        }
-
-        .standings-table th {
-            text-align: left;
-            color: #666;
-            font-weight: normal;
-            padding: 1px 0;
+            font-size: 6.5px;
         }
 
         .standings-table td {
             padding: 1px 0;
         }
 
-        .standings-table .flag { font-size: 9px; margin-right: 2px; }
+        .standings-table .flag { font-size: 8px; margin-right: 1px; }
         .standings-table .pts { text-align: right; font-weight: bold; color: #00A5B5; }
 
         .standings-table tr.qualified td { background: rgba(0, 165, 181, 0.15); }
@@ -129,18 +122,15 @@
         .standings-table tr.eliminated td { opacity: 0.4; }
 
         /* Bracket Styles */
-        .bracket-container {
+        .bracket-wrapper {
             display: flex;
-            align-items: flex-start;
-            gap: 3px;
-            height: 100%;
+            align-items: center;
         }
 
         .bracket-round {
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
-            min-width: 85px;
+            align-items: center;
         }
 
         .round-header {
@@ -148,24 +138,22 @@
             font-size: 7px;
             color: #A4195C;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             white-space: nowrap;
         }
 
         .round-matches {
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
-            flex: 1;
-            gap: 2px;
         }
 
+        /* Match boxes */
         .match-box {
             background: #1a1a2e;
             border: 1px solid #2a2a3e;
             border-radius: 2px;
-            padding: 2px 3px;
-            position: relative;
+            padding: 2px 4px;
+            width: 72px;
         }
 
         .match-team {
@@ -173,7 +161,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 1px 0;
-            font-size: 7px;
+            font-size: 6.5px;
         }
 
         .match-team .team-info {
@@ -182,113 +170,107 @@
             gap: 2px;
         }
 
-        .match-team .flag { font-size: 10px; }
-        .match-team .code { font-weight: 500; min-width: 24px; }
+        .match-team .flag { font-size: 9px; }
+        .match-team .code { font-weight: 500; }
         .match-team .score {
             font-weight: bold;
-            min-width: 10px;
+            min-width: 8px;
             text-align: right;
         }
 
         .winner-team {
-            background: rgba(34, 197, 94, 0.2);
+            background: rgba(34, 197, 94, 0.25);
             border-radius: 2px;
             padding: 1px 2px;
             margin: -1px -2px;
         }
 
         .winner-team .code { color: #22c55e; }
-
-        .loser-team {
-            opacity: 0.5;
-        }
+        .loser-team { opacity: 0.5; }
 
         .match-note {
-            font-size: 6px;
+            font-size: 5px;
             color: #888;
             text-align: center;
+            margin-top: 1px;
         }
 
-        /* Connectors */
-        .connector-column {
+        /* Connector lines */
+        .connector-group {
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
-            width: 8px;
+            width: 20px;
         }
 
-        .connector {
-            border: 1px solid #444;
-            border-left: none;
-            height: 50%;
+        .connector-pair {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .connector-line {
+            border-color: #444;
+            border-style: solid;
+            border-width: 0;
         }
 
         .connector-top {
-            border-bottom: none;
-            border-radius: 0 4px 0 0;
+            border-right-width: 1px;
+            border-bottom-width: 1px;
         }
 
         .connector-bottom {
-            border-top: none;
-            border-radius: 0 0 4px 0;
+            border-right-width: 1px;
+            border-top-width: 1px;
+        }
+
+        .connector-horizontal {
+            border-top-width: 1px;
+            width: 100%;
         }
 
         /* Champion Box */
-        .final-round {
+        .champion-section {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            margin-left: 15px;
         }
 
         .champion-box {
             background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(164, 25, 92, 0.2));
             border: 2px solid #D4AF37;
             border-radius: 6px;
-            padding: 8px 12px;
+            padding: 8px 15px;
             text-align: center;
-            margin-top: 8px;
         }
 
-        .champion-box .trophy { font-size: 20px; }
+        .champion-box .trophy { font-size: 22px; }
         .champion-box .label { font-size: 6px; color: #D4AF37; letter-spacing: 1px; margin: 2px 0; }
-        .champion-box .winner-flag { font-size: 24px; }
-        .champion-box .winner-name { font-size: 11px; font-weight: bold; color: #D4AF37; }
-        .champion-box .final-score { font-size: 7px; color: #888; margin-top: 2px; }
+        .champion-box .winner-flag { font-size: 28px; }
+        .champion-box .winner-name { font-size: 12px; font-weight: bold; color: #D4AF37; }
+        .champion-box .final-score { font-size: 7px; color: #aaa; margin-top: 3px; }
 
         .print-btn {
             position: fixed;
-            top: 15px;
-            right: 15px;
+            top: 10px;
+            right: 10px;
             background: linear-gradient(135deg, #A4195C, #00A5B5);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 8px 14px;
+            border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 11px;
+            font-size: 10px;
             z-index: 100;
         }
 
         .footer {
-            margin-top: 8px;
+            margin-top: 6px;
             text-align: center;
             font-size: 6px;
-            color: #666;
-            border-top: 1px solid #333;
-            padding-top: 5px;
-        }
-
-        /* Match pair grouping for bracket flow */
-        .match-pair {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .spacer {
-            flex: 1;
+            color: #555;
         }
     </style>
 </head>
@@ -297,23 +279,23 @@
 
     <div class="header">
         <h1>FIFA WORLD CUP 2026 — PREDICTED RESULTS</h1>
-        <p>Deterministic prediction based on FIFA rankings, ELO ratings, betting odds & expert analysis | June 11 - July 19, 2026</p>
+        <p>Deterministic prediction based on FIFA rankings, ELO ratings, betting odds & expert analysis</p>
     </div>
 
     <div class="content">
         <div class="groups-section">
-            <h2>Group Stage Final Standings</h2>
+            <h2>Group Stage</h2>
             <div class="groups-grid" id="groupsGrid"></div>
         </div>
 
         <div class="bracket-section">
-            <h2>Knockout Stage Bracket</h2>
-            <div class="bracket-container" id="bracketContainer"></div>
+            <h2>Knockout Bracket</h2>
+            <div class="bracket-wrapper" id="bracketWrapper"></div>
         </div>
     </div>
 
     <div class="footer">
-        <p>Prediction model: Team strength (45-94) derived from betting odds. Spain +450 | France +500 | England +700 | Brazil +800 | Portugal/Argentina +900</p>
+        Team strength ratings (45-94) derived from betting odds: Spain +450 | France +500 | England +700 | Brazil +800 | Portugal/Argentina +900
     </div>
 
     <script src="teams.js"></script>
@@ -328,134 +310,145 @@
             sim.simulateR16();
             sim.simulateQF();
             sim.simulateSF();
-            const finalResult = sim.simulateFinal();
+            sim.simulateFinal();
 
             // Render groups
             const groupsGrid = document.getElementById('groupsGrid');
-            const groupLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
-
-            groupLetters.forEach(letter => {
+            ['A','B','C','D','E','F','G','H','I','J','K','L'].forEach(letter => {
                 const standings = sim.groupStandings[letter];
                 const groupDiv = document.createElement('div');
                 groupDiv.className = 'group';
 
-                let html = `<h3>Group ${letter}</h3>`;
-                html += `<table class="standings-table">`;
-
+                let html = `<h3>Group ${letter}</h3><table class="standings-table">`;
                 standings.forEach((team, i) => {
-                    let rowClass = '';
-                    if (i < 2) rowClass = 'qualified';
-                    else if (i === 2 && sim.thirdPlaceTeams.some(t => t.code === team.code)) {
-                        rowClass = 'third-qualified';
-                    } else if (i >= 2) {
-                        rowClass = 'eliminated';
-                    }
-
+                    let rowClass = i < 2 ? 'qualified' :
+                        (i === 2 && sim.thirdPlaceTeams.some(t => t.code === team.code)) ? 'third-qualified' : 'eliminated';
                     const t = TEAMS[team.code];
-                    html += `<tr class="${rowClass}">
-                        <td><span class="flag">${t.flag}</span>${t.code}</td>
-                        <td class="pts">${team.points}</td>
-                    </tr>`;
+                    html += `<tr class="${rowClass}"><td><span class="flag">${t.flag}</span>${t.code}</td><td class="pts">${team.points}</td></tr>`;
                 });
-
                 html += `</table>`;
                 groupDiv.innerHTML = html;
                 groupsGrid.appendChild(groupDiv);
             });
 
-            // Build bracket visualization
-            const bracketContainer = document.getElementById('bracketContainer');
+            // Build bracket with connectors
+            const wrapper = document.getElementById('bracketWrapper');
 
-            function createMatchBox(match, showNote = true) {
+            function matchHtml(match) {
                 const home = TEAMS[match.home];
                 const away = TEAMS[match.away];
-                const isHomeWinner = match.winner === match.home;
+                const hw = match.winner === match.home;
+                let note = match.penalties ? 'PEN' : (match.extraTime ? 'AET' : '');
 
-                let note = '';
-                if (match.penalties) note = 'PEN';
-                else if (match.extraTime) note = 'AET';
-
-                return `
-                    <div class="match-box">
-                        <div class="match-team ${isHomeWinner ? 'winner-team' : 'loser-team'}">
-                            <div class="team-info">
-                                <span class="flag">${home.flag}</span>
-                                <span class="code">${home.code}</span>
-                            </div>
-                            <span class="score">${Math.floor(match.homeGoals)}</span>
-                        </div>
-                        <div class="match-team ${!isHomeWinner ? 'winner-team' : 'loser-team'}">
-                            <div class="team-info">
-                                <span class="flag">${away.flag}</span>
-                                <span class="code">${away.code}</span>
-                            </div>
-                            <span class="score">${Math.floor(match.awayGoals)}</span>
-                        </div>
-                        ${note && showNote ? `<div class="match-note">${note}</div>` : ''}
+                return `<div class="match-box">
+                    <div class="match-team ${hw ? 'winner-team' : 'loser-team'}">
+                        <div class="team-info"><span class="flag">${home.flag}</span><span class="code">${home.code}</span></div>
+                        <span class="score">${Math.floor(match.homeGoals)}</span>
                     </div>
-                `;
+                    <div class="match-team ${!hw ? 'winner-team' : 'loser-team'}">
+                        <div class="team-info"><span class="flag">${away.flag}</span><span class="code">${away.code}</span></div>
+                        <span class="score">${Math.floor(match.awayGoals)}</span>
+                    </div>
+                    ${note ? `<div class="match-note">${note}</div>` : ''}
+                </div>`;
             }
 
-            // R32 Column
-            let r32Html = `<div class="bracket-round">
+            // Calculate spacing
+            const baseHeight = 32; // Height of one match box
+            const baseGap = 4;
+
+            function buildRound(matches, spacing) {
+                let html = '';
+                matches.forEach((match, i) => {
+                    const marginTop = i === 0 ? (spacing - baseHeight) / 2 : spacing - baseHeight;
+                    html += `<div style="margin-top: ${Math.max(0, marginTop)}px">${matchHtml(match)}</div>`;
+                });
+                return html;
+            }
+
+            function buildConnectors(count, inputSpacing, outputSpacing) {
+                let html = '';
+                for (let i = 0; i < count; i++) {
+                    const topHeight = inputSpacing / 2;
+                    const bottomHeight = inputSpacing / 2;
+                    const marginTop = i === 0 ? (outputSpacing - inputSpacing) / 2 : outputSpacing - inputSpacing;
+
+                    html += `<div class="connector-pair" style="margin-top: ${Math.max(0, marginTop)}px; height: ${inputSpacing}px;">
+                        <div class="connector-line connector-top" style="height: ${topHeight}px;"></div>
+                        <div class="connector-line connector-bottom" style="height: ${bottomHeight}px;"></div>
+                    </div>`;
+                }
+                return html;
+            }
+
+            // Spacing calculations for each round
+            const r32Spacing = baseHeight + baseGap;           // 36px per match
+            const r16Spacing = r32Spacing * 2;                  // 72px per match
+            const qfSpacing = r16Spacing * 2;                   // 144px per match
+            const sfSpacing = qfSpacing * 2;                    // 288px per match
+            const finalSpacing = sfSpacing * 2;                 // 576px
+
+            // R32
+            let bracketHtml = `<div class="bracket-round">
                 <div class="round-header">Round of 32</div>
-                <div class="round-matches">`;
-            sim.knockoutResults.r32.forEach(match => {
-                r32Html += createMatchBox(match);
-            });
-            r32Html += `</div></div>`;
+                <div class="round-matches">${buildRound(sim.knockoutResults.r32, r32Spacing)}</div>
+            </div>`;
 
-            // R16 Column
-            let r16Html = `<div class="bracket-round">
+            // Connectors R32 → R16
+            bracketHtml += `<div class="connector-group">${buildConnectors(8, r32Spacing * 2, r16Spacing)}</div>`;
+
+            // R16
+            bracketHtml += `<div class="bracket-round">
                 <div class="round-header">Round of 16</div>
-                <div class="round-matches" style="gap: 20px;">`;
-            sim.knockoutResults.r16.forEach(match => {
-                r16Html += createMatchBox(match);
-            });
-            r16Html += `</div></div>`;
+                <div class="round-matches">${buildRound(sim.knockoutResults.r16, r16Spacing)}</div>
+            </div>`;
 
-            // QF Column
-            let qfHtml = `<div class="bracket-round">
+            // Connectors R16 → QF
+            bracketHtml += `<div class="connector-group">${buildConnectors(4, r16Spacing * 2, qfSpacing)}</div>`;
+
+            // QF
+            bracketHtml += `<div class="bracket-round">
                 <div class="round-header">Quarter Finals</div>
-                <div class="round-matches" style="gap: 55px;">`;
-            sim.knockoutResults.qf.forEach(match => {
-                qfHtml += createMatchBox(match);
-            });
-            qfHtml += `</div></div>`;
+                <div class="round-matches">${buildRound(sim.knockoutResults.qf, qfSpacing)}</div>
+            </div>`;
 
-            // SF Column
-            let sfHtml = `<div class="bracket-round">
+            // Connectors QF → SF
+            bracketHtml += `<div class="connector-group">${buildConnectors(2, qfSpacing * 2, sfSpacing)}</div>`;
+
+            // SF
+            bracketHtml += `<div class="bracket-round">
                 <div class="round-header">Semi Finals</div>
-                <div class="round-matches" style="gap: 120px;">`;
-            sim.knockoutResults.sf.forEach(match => {
-                sfHtml += createMatchBox(match);
-            });
-            sfHtml += `</div></div>`;
+                <div class="round-matches">${buildRound(sim.knockoutResults.sf, sfSpacing)}</div>
+            </div>`;
 
-            // Final Column
-            const finalMatch = sim.knockoutResults.final[0];
+            // Connectors SF → Final
+            bracketHtml += `<div class="connector-group">${buildConnectors(1, sfSpacing * 2, finalSpacing)}</div>`;
+
+            // Final
+            bracketHtml += `<div class="bracket-round">
+                <div class="round-header">Final</div>
+                <div class="round-matches">${buildRound(sim.knockoutResults.final, finalSpacing)}</div>
+            </div>`;
+
+            // Champion
             const champion = TEAMS[sim.champion];
             const runnerUp = TEAMS[sim.runnerUp];
-
+            const finalMatch = sim.knockoutResults.final[0];
             let scoreText = `${Math.floor(finalMatch.homeGoals)}-${Math.floor(finalMatch.awayGoals)}`;
             if (finalMatch.penalties) scoreText += ' (P)';
             else if (finalMatch.extraTime) scoreText += ' (AET)';
 
-            let finalHtml = `<div class="bracket-round final-round">
-                <div class="round-header">Final</div>
-                <div class="round-matches">
-                    ${createMatchBox(finalMatch, true)}
-                </div>
+            bracketHtml += `<div class="champion-section">
                 <div class="champion-box">
                     <div class="trophy">🏆</div>
-                    <div class="label">CHAMPION</div>
+                    <div class="label">WORLD CHAMPION</div>
                     <div class="winner-flag">${champion.flag}</div>
                     <div class="winner-name">${champion.name}</div>
                     <div class="final-score">def. ${runnerUp.name} ${scoreText}</div>
                 </div>
             </div>`;
 
-            bracketContainer.innerHTML = r32Html + r16Html + qfHtml + sfHtml + finalHtml;
+            wrapper.innerHTML = bracketHtml;
         });
     </script>
 </body>
