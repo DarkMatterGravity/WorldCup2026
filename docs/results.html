@@ -38,7 +38,7 @@
             .winner-team { background: #d4edda !important; }
             h1, h2, h3 { color: black !important; }
             .champion-box { background: #fff3cd !important; border-color: #ffc107 !important; }
-            .connector-line { border-color: #999 !important; }
+            .connector { border-color: #999 !important; }
         }
 
         .header {
@@ -65,10 +65,11 @@
         .content {
             display: flex;
             gap: 15px;
+            align-items: flex-start;
         }
 
         .groups-section {
-            flex: 0 0 280px;
+            flex: 0 0 260px;
         }
 
         .bracket-section {
@@ -110,27 +111,22 @@
             font-size: 6.5px;
         }
 
-        .standings-table td {
-            padding: 1px 0;
-        }
-
+        .standings-table td { padding: 1px 0; }
         .standings-table .flag { font-size: 8px; margin-right: 1px; }
         .standings-table .pts { text-align: right; font-weight: bold; color: #00A5B5; }
-
         .standings-table tr.qualified td { background: rgba(0, 165, 181, 0.15); }
         .standings-table tr.third-qualified td { background: rgba(212, 175, 55, 0.15); }
         .standings-table tr.eliminated td { opacity: 0.4; }
 
-        /* Bracket Styles */
+        /* Bracket Container */
         .bracket-wrapper {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
         }
 
-        .bracket-round {
+        .round-column {
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
         .round-header {
@@ -138,8 +134,8 @@
             font-size: 7px;
             color: #A4195C;
             font-weight: bold;
-            margin-bottom: 3px;
-            white-space: nowrap;
+            margin-bottom: 4px;
+            height: 14px;
         }
 
         .round-matches {
@@ -147,13 +143,14 @@
             flex-direction: column;
         }
 
-        /* Match boxes */
+        /* Match box */
         .match-box {
             background: #1a1a2e;
             border: 1px solid #2a2a3e;
             border-radius: 2px;
             padding: 2px 4px;
-            width: 72px;
+            width: 75px;
+            flex-shrink: 0;
         }
 
         .match-team {
@@ -172,11 +169,7 @@
 
         .match-team .flag { font-size: 9px; }
         .match-team .code { font-weight: 500; }
-        .match-team .score {
-            font-weight: bold;
-            min-width: 8px;
-            text-align: right;
-        }
+        .match-team .score { font-weight: bold; min-width: 8px; text-align: right; }
 
         .winner-team {
             background: rgba(34, 197, 94, 0.25);
@@ -184,7 +177,6 @@
             padding: 1px 2px;
             margin: -1px -2px;
         }
-
         .winner-team .code { color: #22c55e; }
         .loser-team { opacity: 0.5; }
 
@@ -195,60 +187,64 @@
             margin-top: 1px;
         }
 
-        /* Connector lines */
-        .connector-group {
+        /* Connector styles */
+        .connector-column {
             display: flex;
             flex-direction: column;
-            width: 20px;
+            width: 18px;
+            padding-top: 14px; /* Match the round-header height */
         }
 
         .connector-pair {
             display: flex;
             flex-direction: column;
+            flex: 1;
             position: relative;
         }
 
-        .connector-line {
-            border-color: #444;
-            border-style: solid;
-            border-width: 0;
+        .connector-pair::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 25%;
+            height: 50%;
+            width: 9px;
+            border: 1px solid #444;
+            border-left: none;
+            border-radius: 0 4px 4px 0;
         }
 
-        .connector-top {
-            border-right-width: 1px;
-            border-bottom-width: 1px;
-        }
-
-        .connector-bottom {
-            border-right-width: 1px;
-            border-top-width: 1px;
-        }
-
-        .connector-horizontal {
-            border-top-width: 1px;
-            width: 100%;
+        .connector-pair::after {
+            content: '';
+            position: absolute;
+            right: 9px;
+            top: 50%;
+            width: 9px;
+            border-top: 1px solid #444;
         }
 
         /* Champion Box */
-        .champion-section {
+        .champion-column {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-left: 15px;
+            justify-content: center;
+            padding-left: 15px;
+            padding-top: 14px;
         }
 
         .champion-box {
             background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(164, 25, 92, 0.2));
             border: 2px solid #D4AF37;
             border-radius: 6px;
-            padding: 8px 15px;
+            padding: 10px 18px;
             text-align: center;
         }
 
-        .champion-box .trophy { font-size: 22px; }
-        .champion-box .label { font-size: 6px; color: #D4AF37; letter-spacing: 1px; margin: 2px 0; }
-        .champion-box .winner-flag { font-size: 28px; }
-        .champion-box .winner-name { font-size: 12px; font-weight: bold; color: #D4AF37; }
+        .champion-box .trophy { font-size: 24px; }
+        .champion-box .label { font-size: 6px; color: #D4AF37; letter-spacing: 1px; margin: 3px 0; }
+        .champion-box .winner-flag { font-size: 32px; }
+        .champion-box .winner-name { font-size: 13px; font-weight: bold; color: #D4AF37; }
         .champion-box .final-score { font-size: 7px; color: #aaa; margin-top: 3px; }
 
         .print-btn {
@@ -272,6 +268,18 @@
             font-size: 6px;
             color: #555;
         }
+
+        /* Specific round spacing */
+        .r32-matches .match-wrapper { height: 34px; display: flex; align-items: center; }
+        .r16-matches .match-wrapper { height: 68px; display: flex; align-items: center; }
+        .qf-matches .match-wrapper { height: 136px; display: flex; align-items: center; }
+        .sf-matches .match-wrapper { height: 272px; display: flex; align-items: center; }
+        .final-matches .match-wrapper { height: 544px; display: flex; align-items: center; }
+
+        .c-r32-r16 .connector-pair { height: 68px; }
+        .c-r16-qf .connector-pair { height: 136px; }
+        .c-qf-sf .connector-pair { height: 272px; }
+        .c-sf-final .connector-pair { height: 544px; }
     </style>
 </head>
 <body>
@@ -331,9 +339,7 @@
                 groupsGrid.appendChild(groupDiv);
             });
 
-            // Build bracket with connectors
-            const wrapper = document.getElementById('bracketWrapper');
-
+            // Match HTML helper
             function matchHtml(match) {
                 const home = TEAMS[match.home];
                 const away = TEAMS[match.away];
@@ -353,82 +359,63 @@
                 </div>`;
             }
 
-            // Calculate spacing
-            const baseHeight = 32; // Height of one match box
-            const baseGap = 4;
+            const wrapper = document.getElementById('bracketWrapper');
+            let html = '';
 
-            function buildRound(matches, spacing) {
-                let html = '';
-                matches.forEach((match, i) => {
-                    const marginTop = i === 0 ? (spacing - baseHeight) / 2 : spacing - baseHeight;
-                    html += `<div style="margin-top: ${Math.max(0, marginTop)}px">${matchHtml(match)}</div>`;
-                });
-                return html;
-            }
+            // R32 Column
+            html += `<div class="round-column"><div class="round-header">Round of 32</div><div class="round-matches r32-matches">`;
+            sim.knockoutResults.r32.forEach(m => {
+                html += `<div class="match-wrapper">${matchHtml(m)}</div>`;
+            });
+            html += `</div></div>`;
 
-            function buildConnectors(count, inputSpacing, outputSpacing) {
-                let html = '';
-                for (let i = 0; i < count; i++) {
-                    const topHeight = inputSpacing / 2;
-                    const bottomHeight = inputSpacing / 2;
-                    const marginTop = i === 0 ? (outputSpacing - inputSpacing) / 2 : outputSpacing - inputSpacing;
+            // Connectors R32 → R16 (8 pairs)
+            html += `<div class="connector-column c-r32-r16">`;
+            for (let i = 0; i < 8; i++) html += `<div class="connector-pair"></div>`;
+            html += `</div>`;
 
-                    html += `<div class="connector-pair" style="margin-top: ${Math.max(0, marginTop)}px; height: ${inputSpacing}px;">
-                        <div class="connector-line connector-top" style="height: ${topHeight}px;"></div>
-                        <div class="connector-line connector-bottom" style="height: ${bottomHeight}px;"></div>
-                    </div>`;
-                }
-                return html;
-            }
+            // R16 Column
+            html += `<div class="round-column"><div class="round-header">Round of 16</div><div class="round-matches r16-matches">`;
+            sim.knockoutResults.r16.forEach(m => {
+                html += `<div class="match-wrapper">${matchHtml(m)}</div>`;
+            });
+            html += `</div></div>`;
 
-            // Spacing calculations for each round
-            const r32Spacing = baseHeight + baseGap;           // 36px per match
-            const r16Spacing = r32Spacing * 2;                  // 72px per match
-            const qfSpacing = r16Spacing * 2;                   // 144px per match
-            const sfSpacing = qfSpacing * 2;                    // 288px per match
-            const finalSpacing = sfSpacing * 2;                 // 576px
+            // Connectors R16 → QF (4 pairs)
+            html += `<div class="connector-column c-r16-qf">`;
+            for (let i = 0; i < 4; i++) html += `<div class="connector-pair"></div>`;
+            html += `</div>`;
 
-            // R32
-            let bracketHtml = `<div class="bracket-round">
-                <div class="round-header">Round of 32</div>
-                <div class="round-matches">${buildRound(sim.knockoutResults.r32, r32Spacing)}</div>
-            </div>`;
+            // QF Column
+            html += `<div class="round-column"><div class="round-header">Quarter Finals</div><div class="round-matches qf-matches">`;
+            sim.knockoutResults.qf.forEach(m => {
+                html += `<div class="match-wrapper">${matchHtml(m)}</div>`;
+            });
+            html += `</div></div>`;
 
-            // Connectors R32 → R16
-            bracketHtml += `<div class="connector-group">${buildConnectors(8, r32Spacing * 2, r16Spacing)}</div>`;
+            // Connectors QF → SF (2 pairs)
+            html += `<div class="connector-column c-qf-sf">`;
+            for (let i = 0; i < 2; i++) html += `<div class="connector-pair"></div>`;
+            html += `</div>`;
 
-            // R16
-            bracketHtml += `<div class="bracket-round">
-                <div class="round-header">Round of 16</div>
-                <div class="round-matches">${buildRound(sim.knockoutResults.r16, r16Spacing)}</div>
-            </div>`;
+            // SF Column
+            html += `<div class="round-column"><div class="round-header">Semi Finals</div><div class="round-matches sf-matches">`;
+            sim.knockoutResults.sf.forEach(m => {
+                html += `<div class="match-wrapper">${matchHtml(m)}</div>`;
+            });
+            html += `</div></div>`;
 
-            // Connectors R16 → QF
-            bracketHtml += `<div class="connector-group">${buildConnectors(4, r16Spacing * 2, qfSpacing)}</div>`;
+            // Connectors SF → Final (1 pair)
+            html += `<div class="connector-column c-sf-final">`;
+            html += `<div class="connector-pair"></div>`;
+            html += `</div>`;
 
-            // QF
-            bracketHtml += `<div class="bracket-round">
-                <div class="round-header">Quarter Finals</div>
-                <div class="round-matches">${buildRound(sim.knockoutResults.qf, qfSpacing)}</div>
-            </div>`;
-
-            // Connectors QF → SF
-            bracketHtml += `<div class="connector-group">${buildConnectors(2, qfSpacing * 2, sfSpacing)}</div>`;
-
-            // SF
-            bracketHtml += `<div class="bracket-round">
-                <div class="round-header">Semi Finals</div>
-                <div class="round-matches">${buildRound(sim.knockoutResults.sf, sfSpacing)}</div>
-            </div>`;
-
-            // Connectors SF → Final
-            bracketHtml += `<div class="connector-group">${buildConnectors(1, sfSpacing * 2, finalSpacing)}</div>`;
-
-            // Final
-            bracketHtml += `<div class="bracket-round">
-                <div class="round-header">Final</div>
-                <div class="round-matches">${buildRound(sim.knockoutResults.final, finalSpacing)}</div>
-            </div>`;
+            // Final Column
+            html += `<div class="round-column"><div class="round-header">Final</div><div class="round-matches final-matches">`;
+            sim.knockoutResults.final.forEach(m => {
+                html += `<div class="match-wrapper">${matchHtml(m)}</div>`;
+            });
+            html += `</div></div>`;
 
             // Champion
             const champion = TEAMS[sim.champion];
@@ -438,7 +425,7 @@
             if (finalMatch.penalties) scoreText += ' (P)';
             else if (finalMatch.extraTime) scoreText += ' (AET)';
 
-            bracketHtml += `<div class="champion-section">
+            html += `<div class="champion-column">
                 <div class="champion-box">
                     <div class="trophy">🏆</div>
                     <div class="label">WORLD CHAMPION</div>
@@ -448,7 +435,7 @@
                 </div>
             </div>`;
 
-            wrapper.innerHTML = bracketHtml;
+            wrapper.innerHTML = html;
         });
     </script>
 </body>
