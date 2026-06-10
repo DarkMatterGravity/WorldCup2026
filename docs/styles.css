@@ -77,17 +77,21 @@ body {
     opacity: 0;
     transform: translateX(50px);
     transition: opacity 0.4s ease, transform 0.4s ease;
+    background: var(--bg-primary);
+    z-index: 1;
 }
 
 .slide.active {
     display: flex;
     opacity: 1;
     transform: translateX(0);
+    z-index: 10;
 }
 
 .slide.exit {
     opacity: 0;
     transform: translateX(-50px);
+    z-index: 5;
 }
 
 /* Title Screen */
