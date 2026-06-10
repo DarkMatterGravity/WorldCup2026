@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a14">
+    <title>World Cup 2026 Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container" id="app">
+        <!-- Title Screen -->
+        <div class="slide active" id="titleSlide">
+            <div class="title-content">
+                <div class="wc-logo">
+                    <div class="logo-flags">
+                        <span>🇺🇸</span>
+                        <span>🇲🇽</span>
+                        <span>🇨🇦</span>
+                    </div>
+                    <h1>FIFA WORLD CUP</h1>
+                    <div class="logo-year">2026</div>
+                    <div class="logo-tagline">PREDICTION SIMULATOR</div>
+                </div>
+                <div class="start-prompt">
+                    <span class="pulse">Click anywhere to begin</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group Stage Intro -->
+        <div class="slide" id="groupIntroSlide">
+            <div class="stage-header">
+                <h2>GROUP STAGE</h2>
+                <p>48 teams. 12 groups. 96 matches.</p>
+            </div>
+            <div class="stage-info">
+                <p>Top 2 from each group advance</p>
+                <p>Plus 8 best third-place teams</p>
+            </div>
+            <div class="continue-prompt">Click to begin group stage →</div>
+        </div>
+
+        <!-- Group Display Template (will be cloned for each group) -->
+        <div class="slide" id="groupSlide">
+            <div class="group-header">
+                <h2>GROUP <span id="groupLetter">A</span></h2>
+            </div>
+            <div class="group-table" id="groupTable">
+                <!-- Teams will be inserted here -->
+            </div>
+            <div class="group-matches" id="groupMatches">
+                <!-- Matches will be inserted here -->
+            </div>
+            <div class="continue-prompt">Click to see results →</div>
+        </div>
+
+        <!-- Group Results -->
+        <div class="slide" id="groupResultsSlide">
+            <div class="group-header">
+                <h2>GROUP <span id="resultGroupLetter">A</span> - FINAL STANDINGS</h2>
+            </div>
+            <div class="standings-table" id="standingsTable">
+                <!-- Final standings will be inserted here -->
+            </div>
+            <div class="qualifiers-display" id="qualifiersDisplay">
+                <!-- Who qualified will be shown here -->
+            </div>
+            <div class="continue-prompt">Click to continue →</div>
+        </div>
+
+        <!-- Round of 32 Intro -->
+        <div class="slide" id="r32IntroSlide">
+            <div class="stage-header knockout">
+                <h2>ROUND OF 32</h2>
+                <p>The knockout stage begins</p>
+            </div>
+            <div class="stage-info">
+                <p>16 matches. Single elimination.</p>
+                <p>No more second chances.</p>
+            </div>
+            <div class="continue-prompt">Click to begin →</div>
+        </div>
+
+        <!-- Knockout Match Template -->
+        <div class="slide" id="knockoutMatchSlide">
+            <div class="knockout-header">
+                <h2 id="knockoutRoundName">ROUND OF 32</h2>
+                <span class="match-number" id="matchNumber">Match 1 of 16</span>
+            </div>
+            <div class="knockout-match" id="knockoutMatch">
+                <div class="ko-team home" id="koTeamHome">
+                    <span class="team-flag">🇦🇷</span>
+                    <span class="team-name">Argentina</span>
+                    <span class="team-score">-</span>
+                </div>
+                <div class="ko-vs">VS</div>
+                <div class="ko-team away" id="koTeamAway">
+                    <span class="team-flag">🇧🇷</span>
+                    <span class="team-name">Brazil</span>
+                    <span class="team-score">-</span>
+                </div>
+            </div>
+            <div class="continue-prompt">Click to reveal result →</div>
+        </div>
+
+        <!-- Knockout Result Template -->
+        <div class="slide" id="knockoutResultSlide">
+            <div class="knockout-header">
+                <h2 id="resultRoundName">ROUND OF 32</h2>
+            </div>
+            <div class="knockout-result" id="knockoutResult">
+                <div class="ko-team home" id="resultTeamHome">
+                    <span class="team-flag">🇦🇷</span>
+                    <span class="team-name">Argentina</span>
+                    <span class="team-score">2</span>
+                </div>
+                <div class="ko-vs">-</div>
+                <div class="ko-team away" id="resultTeamAway">
+                    <span class="team-flag">🇧🇷</span>
+                    <span class="team-name">Brazil</span>
+                    <span class="team-score">1</span>
+                </div>
+            </div>
+            <div class="winner-banner" id="winnerBanner">
+                <span class="winner-flag">🇦🇷</span>
+                <span class="winner-text">ARGENTINA ADVANCES</span>
+            </div>
+            <div class="continue-prompt">Click to continue →</div>
+        </div>
+
+        <!-- Semi-Final Intro -->
+        <div class="slide" id="semiIntroSlide">
+            <div class="stage-header semifinal">
+                <h2>SEMI-FINALS</h2>
+                <p>Four teams remain</p>
+            </div>
+            <div class="semifinal-bracket" id="semiFinalTeams">
+                <!-- Will show the 4 remaining teams -->
+            </div>
+            <div class="continue-prompt">Click to begin semi-finals →</div>
+        </div>
+
+        <!-- Final Intro -->
+        <div class="slide" id="finalIntroSlide">
+            <div class="stage-header final">
+                <h2>THE FINAL</h2>
+                <p>MetLife Stadium, New Jersey</p>
+            </div>
+            <div class="final-matchup" id="finalMatchup">
+                <!-- Will show the 2 finalists -->
+            </div>
+            <div class="continue-prompt">Click to reveal the World Cup Champion →</div>
+        </div>
+
+        <!-- Champion Reveal -->
+        <div class="slide" id="championSlide">
+            <div class="champion-reveal">
+                <div class="trophy">🏆</div>
+                <h2>WORLD CUP CHAMPION</h2>
+                <div class="champion-flag" id="championFlag"></div>
+                <div class="champion-name" id="championName"></div>
+                <div class="final-score-display" id="finalScoreDisplay"></div>
+            </div>
+            <div class="confetti" id="confetti"></div>
+            <div class="continue-prompt">Click to restart simulation →</div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-label" id="progressLabel">Welcome</div>
+    </div>
+
+    <script src="teams.js"></script>
+    <script src="simulation.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
