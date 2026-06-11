@@ -825,3 +825,128 @@ body {
         transform: scale(1);
     }
 }
+
+/* Actual Score Overlay - rises up over predicted score */
+.match-row {
+    position: relative;
+}
+
+.actual-score-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--wc-purple), var(--wc-magenta));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(100%);
+    z-index: 10;
+}
+
+.actual-score-overlay.animate-in {
+    animation: actualScoreRise 0.6s ease forwards;
+}
+
+.actual-score-overlay.settle {
+    animation: actualScoreSettle 0.4s ease forwards;
+}
+
+@keyframes actualScoreRise {
+    0% {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(-10%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes actualScoreSettle {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.actual-score-overlay .actual-label {
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 10px;
+}
+
+.actual-score-overlay .actual-score {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: white;
+}
+
+/* After actual score settles, show comparison */
+.match-row.has-actual .match-score {
+    flex-direction: column;
+    gap: 2px;
+}
+
+.match-row.has-actual .actual-main {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--wc-teal);
+}
+
+.match-row.has-actual .predicted-small {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+.match-row.has-actual .predicted-small::before {
+    content: "pred: ";
+}
+
+/* Correct prediction highlight */
+.match-row.has-actual.correct-winner .actual-main {
+    color: var(--win-green);
+}
+
+.match-row.has-actual.exact-score .actual-main {
+    color: var(--wc-gold);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* Live indicator */
+.live-badge {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: var(--win-green);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 100;
+}
+
+.live-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}

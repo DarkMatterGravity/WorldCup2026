@@ -11,6 +11,7 @@ class PresentationController {
         this.currentKnockoutRound = null;
         this.currentKnockoutMatch = 0;
         this.knockoutPhase = 'matchup'; // matchup, result
+        this.liveScoresLoaded = false;
 
         this.groupLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
@@ -18,6 +19,9 @@ class PresentationController {
     }
 
     init() {
+        // Fetch live scores on startup
+        this.loadLiveScores();
+
         // Click anywhere to advance
         document.getElementById('app').addEventListener('click', (e) => {
             // Don't advance if clicking specific elements
@@ -34,6 +38,26 @@ class PresentationController {
         });
 
         this.updateProgress(0, 'Welcome');
+    }
+
+    async loadLiveScores() {
+        if (window.liveScores) {
+            await window.liveScores.fetchScores();
+            this.liveScoresLoaded = true;
+            // Show live badge if we have actual results
+            if (window.liveScores.actualResults.size > 0) {
+                this.showLiveBadge();
+            }
+        }
+    }
+
+    showLiveBadge() {
+        if (!document.querySelector('.live-badge')) {
+            const badge = document.createElement('div');
+            badge.className = 'live-badge';
+            badge.textContent = 'LIVE SCORES';
+            document.getElementById('app').appendChild(badge);
+        }
     }
 
     advance() {
@@ -199,13 +223,19 @@ class PresentationController {
                 const scoreEl = matchRows[i].querySelector('.match-score');
                 scoreEl.classList.remove('pending');
                 scoreEl.innerHTML = `
-                    <span class="home-score">${match.homeGoals}</span>
+                    <span class="home-score">${Math.floor(match.homeGoals)}</span>
                     <span class="score-separator">-</span>
-                    <span class="away-score">${match.awayGoals}</span>
+                    <span class="away-score">${Math.floor(match.awayGoals)}</span>
                 `;
                 scoreEl.classList.add('score-reveal');
             }, i * 150);
         });
+
+        // After predicted scores revealed, check for actual scores
+        const totalRevealTime = matches.length * 150 + 300;
+        setTimeout(() => {
+            this.showActualScores(matches, matchRows);
+        }, totalRevealTime);
 
         // Update prompt text
         const prompt = document.querySelector('#groupSlide .continue-prompt');
@@ -214,6 +244,61 @@ class PresentationController {
         }
 
         this.currentState = 'groupScores';
+    }
+
+    showActualScores(matches, matchRows) {
+        if (!window.liveScores || !this.liveScoresLoaded) return;
+
+        matches.forEach((match, i) => {
+            const actual = window.liveScores.getActualResult(match.home, match.away);
+            if (!actual) return;
+
+            const row = matchRows[i];
+            const scoreEl = row.querySelector('.match-score');
+            const predictedHome = Math.floor(match.homeGoals);
+            const predictedAway = Math.floor(match.awayGoals);
+
+            // Create overlay for animation
+            const overlay = document.createElement('div');
+            overlay.className = 'actual-score-overlay';
+            overlay.innerHTML = `
+                <span class="actual-label">Actual</span>
+                <span class="actual-score">${actual.homeScore} - ${actual.awayScore}</span>
+            `;
+            row.appendChild(overlay);
+
+            // Animate in with stagger
+            setTimeout(() => {
+                overlay.classList.add('animate-in');
+
+                // After animation, settle and show comparison
+                setTimeout(() => {
+                    overlay.classList.add('settle');
+
+                    // Determine if prediction was correct
+                    const comparison = window.liveScores.compareResult(
+                        match.home, match.away, predictedHome, predictedAway
+                    );
+
+                    // Update the score display with comparison
+                    setTimeout(() => {
+                        overlay.remove();
+                        row.classList.add('has-actual');
+
+                        if (comparison.exactScore) {
+                            row.classList.add('exact-score');
+                        } else if (comparison.correctWinner) {
+                            row.classList.add('correct-winner');
+                        }
+
+                        scoreEl.innerHTML = `
+                            <span class="actual-main">${actual.homeScore} - ${actual.awayScore}</span>
+                            <span class="predicted-small">${predictedHome} - ${predictedAway}</span>
+                        `;
+                    }, 400);
+                }, 1200);
+            }, i * 400);
+        });
     }
 
     showGroupResults() {
